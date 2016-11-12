@@ -7,23 +7,28 @@ public class Inflammable : MonoBehaviour {
     private ParticleSystem myFireEffect;
     private bool onFire = false;
     private bool isBurnt = false;
+    private float maxDistance = 5f;
 
     void Awake() {
 
+        //désactiver les particules
         myFireEffect = gameObject.GetComponent<ParticleSystem>();
+        myFireEffect.Stop();
+
+
+        //random z-axis rotation pour plus de diversité
+        transform.Find("Visual").Rotate(0.0f, 0.0f, Random.Range(0.0f, 360.0f));
+
+        //random scale pour plus de diversité
+        float mySize = Random.Range(-2f, 2f);
+        transform.Find("Visual").localScale += new Vector3(mySize, mySize, mySize);
 
     }
-    
+
     void Start() {
-        if(myFireEffect != null) {
-            myFireEffect.Stop();
-        }
-
-        transform.Find("Normal").gameObject.SetActive(true);
-        transform.Find("Burnt").gameObject.SetActive(false);
 
     }
-    
+
     void Update() {
 
         UpdateFire();
@@ -35,22 +40,21 @@ public class Inflammable : MonoBehaviour {
     void UpdateFire() {
 
         //Le feu évolue
-        fireValue += (0.0015f * fireValue + 0.0005f) * GlobalVariables.Speed;
-        Debug.Log(GlobalVariables.Speed);
+        fireValue += (0.002f * fireValue) * GlobalVariables.Speed;
         if(fireValue > 100f) {
             fireValue = 100f;
         }
         //Le feu se répand
         //Tableau contenant les colliders proches
-        Collider[] closeColliders = Physics.OverlapSphere(transform.position, 8);
+        Collider[] closeColliders = Physics.OverlapSphere(transform.position, maxDistance);
         //Pour chacun d'entre eux
         foreach(Collider closeCollider in closeColliders) {
             Inflammable closeInflammable = closeCollider.GetComponentInParent<Inflammable>();
             //Si il n'est pas inflammable, passe
-            if (closeInflammable == null) {
+            if (closeInflammable == null || closeInflammable == this) {
                 continue;
             }
-            closeInflammable.PassFire(fireValue);
+            closeInflammable.PassFire(this);
         }
 
     }
@@ -69,27 +73,40 @@ public class Inflammable : MonoBehaviour {
         float greenValue = -2f / 185f * fireValue + 49f / 45f;
         myFireEffect.startColor = new Color(1.0f, greenValue, 0.2f, 1.0f);
 
-        float myCutoff = 1f / 180f * fireValue + 4f / 9f;
-        transform.Find("Normal").gameObject.GetComponent<Renderer>().materials[4].SetFloat("_Cutoff",myCutoff);
+        UpdateMaterials();
 
         if (fireValue == 100f) {
             isBurnt = true;
             myFireEffect.Stop();
-            transform.Find("Normal").gameObject.SetActive(false);
-            transform.Find("Burnt").gameObject.SetActive(true);
         }
 
     }
 
-    //Reçoit le feu de ses voisins
-    public void PassFire(float foreignFire) {
+    void UpdateMaterials() {
 
-        if(foreignFire < 10 || fireValue > 15) {
+        float myCutoff = 1f / 180f * fireValue + 4f / 9f;
+        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[4].SetFloat("_Cutoff", myCutoff);
+        float greyLevel = 1f - fireValue / 100f + Random.Range(0.1f,0.3f);
+        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[0].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[1].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[2].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[3].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+
+
+    }
+
+    //Reçoit le feu de ses voisins
+    public void PassFire(Inflammable foreignTree) {
+
+        float foreignFire = foreignTree.GetComponent<Inflammable>().fireValue;
+        float distance = Vector3.Distance(gameObject.transform.position, foreignTree.GetComponentInChildren<Collider>().ClosestPointOnBounds(gameObject.transform.position));
+
+        if (foreignFire < 10 || fireValue > 15) {
             return;
         }
 
         if(foreignFire > fireValue) {
-            fireValue += (foreignFire * 0.0007f) * GlobalVariables.Speed;
+            fireValue += (foreignFire * 0.002f) * GlobalVariables.Speed * (maxDistance - distance) / maxDistance;
         }
 
     }
