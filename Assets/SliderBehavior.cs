@@ -6,11 +6,13 @@ public class SliderBehavior : MonoBehaviour {
 
     public Slider SpeedSlider;
     public Slider SizeCircleSlider;
+    public Slider NbTreesCreatedSlider;
 
     // Use this for initialization
     void Start() {
         SpeedSlider.onValueChanged.AddListener(delegate { SpeedValueChanged(); });
         SizeCircleSlider.onValueChanged.AddListener(delegate { SizeCircleValueChanged(); });
+        NbTreesCreatedSlider.onValueChanged.AddListener(delegate { NbTreesCreatedValueChanged(); });
 
     }
 
@@ -30,6 +32,19 @@ public class SliderBehavior : MonoBehaviour {
         cylinderBehavior.Radius = SizeCircleSlider.value;
         cylinderBehavior.Resize();
 
+    }
+
+    void NbTreesCreatedValueChanged() {
+        CylinderBehavior cylinderBehavior = GameObject.Find("Cylinder").GetComponent<CylinderBehavior>();
+        int newValue;
+        if(NbTreesCreatedSlider.value == 0) {
+            newValue = 1;
+        } else if(NbTreesCreatedSlider.value == 1) {
+            newValue = 10;
+        } else {
+            newValue = 50;
+        }
+        cylinderBehavior.NbTreesCreated = newValue;
     }
 
 }

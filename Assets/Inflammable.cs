@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Inflammable : MonoBehaviour {
 
     public float fireValue = 0;
+    private float maxFireValue = 120f;
     private ParticleSystem myFireEffect;
     private bool onFire = false;
     private bool isBurnt = false;
     private float maxDistance = 5f;
     private  MyStatistics myStatistics;
+    private List<Inflammable> closeTrees = new List<Inflammable>();
 
     void Awake() {
 
@@ -29,6 +32,20 @@ public class Inflammable : MonoBehaviour {
 
     void Start() {
 
+        //Mettre à jour le nombre d'arbres
+        myStatistics.IncrementNbTree();
+
+        //Tableau contenant les colliders proches
+        Collider[] closeColliders = Physics.OverlapSphere(transform.position, maxDistance);
+        //Pour chacun d'entre eux
+        foreach (Collider closeCollider in closeColliders) {
+            //Recuperer le composant inflammable
+            Inflammable closeInflammable = closeCollider.GetComponentInParent<Inflammable>();
+            if (closeInflammable != null && closeInflammable != this) {     //si non nul et non this
+                AddCloseTree(closeInflammable);         //ajouter le voisin à this
+                closeInflammable.AddCloseTree(this);    //ajouter this au voisin
+            }
+        }
     }
 
     void Update() {
@@ -46,22 +63,18 @@ public class Inflammable : MonoBehaviour {
     //Evolue et répand le feu de l'arbre
     void UpdateFire() {
 
+        if(fireValue < 10f) {
+            return;
+        }
+
         //Le feu évolue
         fireValue += (0.002f * fireValue) * GlobalVariables.Speed;
-        if(fireValue > 100f) {
-            fireValue = 100f;
+        if(fireValue > maxFireValue) {
+            fireValue = maxFireValue;
         }
         //Le feu se répand
-        //Tableau contenant les colliders proches
-        Collider[] closeColliders = Physics.OverlapSphere(transform.position, maxDistance);
-        //Pour chacun d'entre eux
-        foreach(Collider closeCollider in closeColliders) {
-            Inflammable closeInflammable = closeCollider.GetComponentInParent<Inflammable>();
-            //Si il n'est pas inflammable, passe
-            if (closeInflammable == null || closeInflammable == this) {
-                continue;
-            }
-            closeInflammable.PassFire(this);
+        foreach(Inflammable closeTree in closeTrees) {
+            closeTree.PassFire(this);
         }
 
     }
@@ -83,7 +96,7 @@ public class Inflammable : MonoBehaviour {
 
         UpdateMaterials();
 
-        if (fireValue == 100f) {
+        if (fireValue == maxFireValue) {
             isBurnt = true;
             myFireEffect.Stop();
             myStatistics.AddBurnt();
@@ -120,5 +133,10 @@ public class Inflammable : MonoBehaviour {
 
     }
 
+    public void AddCloseTree(Inflammable closeTree) {
+        if (!closeTrees.Contains(closeTree)) {
+            closeTrees.Add(closeTree);
+        }
+    }
 
 }

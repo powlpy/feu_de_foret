@@ -15,8 +15,9 @@ public class GlobalVariables : MonoBehaviour {
 
     static void NextState0to1() {
         State = 1;
-        GameObject.Find("RightClickFire").SetActive(false);
+        GameObject.Find("Instructions").SetActive(false);
         GameObject.Find("SliderSizeCircle").SetActive(false);
+        GameObject.Find("SliderNbTreesCreated").SetActive(false);
     }
 
 }
