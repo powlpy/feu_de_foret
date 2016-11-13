@@ -30,12 +30,17 @@ public class Inflammable : MonoBehaviour {
     }
 
     void Update() {
-
+        if(GlobalVariables.State == 0) {
+            return;
+        }
+        if(GlobalVariables.Speed == 0f) {
+            return;
+        }
         UpdateFire();
         RenderFire();
 
     }
-
+    
     //Evolue et répand le feu de l'arbre
     void UpdateFire() {
 
