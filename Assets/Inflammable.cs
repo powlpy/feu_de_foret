@@ -8,9 +8,11 @@ public class Inflammable : MonoBehaviour {
     private bool onFire = false;
     private bool isBurnt = false;
     private float maxDistance = 5f;
+    private  MyStatistics myStatistics;
 
     void Awake() {
 
+        myStatistics = GameObject.Find("Global").GetComponent<MyStatistics>();
         //désactiver les particules
         myFireEffect = gameObject.GetComponent<ParticleSystem>();
         myFireEffect.Stop();
@@ -73,6 +75,7 @@ public class Inflammable : MonoBehaviour {
         if (!onFire) {
             myFireEffect.Play();
             onFire = true;
+            myStatistics.AddBurning();
         }
 
         float greenValue = -2f / 185f * fireValue + 49f / 45f;
@@ -83,6 +86,7 @@ public class Inflammable : MonoBehaviour {
         if (fireValue == 100f) {
             isBurnt = true;
             myFireEffect.Stop();
+            myStatistics.AddBurnt();
         }
 
     }
