@@ -20,6 +20,9 @@ public class SliderBehavior : MonoBehaviour {
 
         GlobalVariables.Speed = SpeedSlider.value / 2f;
 
+        if (GlobalVariables.Speed == 0f) Time.timeScale = 0;
+        else Time.timeScale = 1;
+
         GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
         foreach (GameObject Tree in trees) {
             Tree.GetComponent<ParticleSystem>().startSpeed = (SpeedSlider.value / 2f) * 5f;

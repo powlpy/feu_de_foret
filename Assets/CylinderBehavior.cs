@@ -46,11 +46,12 @@ public class CylinderBehavior : MonoBehaviour {
                 continue;
             }
 
-            closeInflammable.fireValue = GlobalVariables.FireStartValue;
+            closeInflammable.Ignite();
             fireStarted = true;
         }
 
         if (fireStarted) {
+            this.transform.position = Vector3.zero;
             gameObject.SetActive(false);
             GlobalVariables.NextState();
         }
