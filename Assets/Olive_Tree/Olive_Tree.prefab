@@ -125,7 +125,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
+  m_Convex: 1
   m_Mesh: {fileID: 4300000, guid: 4935bc630833479488a150cc67fefc07, type: 3}
 --- !u!95 &95000010796377446
 Animator:
@@ -155,8 +155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02de0d32c13ddad47a88aad1dd12711e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireValue: 0
-  conditionValue: 0
 --- !u!198 &198000010275318468
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -247,7 +245,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startSpeed:
-      scalar: 5
+      scalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -885,7 +883,7 @@ ParticleSystem:
           rgba: 4278207999
         key1:
           serializedVersion: 2
-          rgba: 4278253823
+          rgba: 4278251007
         key2:
           serializedVersion: 2
           rgba: 0

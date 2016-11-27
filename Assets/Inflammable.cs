@@ -12,7 +12,8 @@ public class Inflammable : MonoBehaviour {
     private  MyStatistics myStatistics;
     private List<Inflammable> closeTrees = new List<Inflammable>();     //trees to pass fire to
     private float inflammability;
-    private bool isBurnt;
+    private bool isBurnt = false;
+    private bool isWatered = false;
 
     void Awake() {
 
@@ -31,6 +32,7 @@ public class Inflammable : MonoBehaviour {
 
         inflammability = Random.Range(1.1f, 1.35f);
     }
+
 
     void Start() {
 
@@ -62,6 +64,7 @@ public class Inflammable : MonoBehaviour {
 
         //le feu evolue
         fireValue += (0.005f * fireValue) * (1-inflammability) * GlobalVariables.Speed * (1 - Mathf.Pow(conditionValue - 550, 2) / 200000f);
+        if (isWatered) fireValue -= 0.1f * GlobalVariables.Speed;
         fireValue = Mathf.Clamp(fireValue, 0f, 100f);
 
         bool currentBurning = IsBurning();
@@ -87,7 +90,7 @@ public class Inflammable : MonoBehaviour {
 
     void RenderFire() {
         if (!IsBurning()) return;
-        myFireEffect.startLifetime = (0.65f * fireValue / 100f) / GlobalVariables.Speed;
+        myFireEffect.startLifetime = (1f * fireValue / 100f) / GlobalVariables.Speed;
 
         UpdateMaterials();
 
@@ -105,7 +108,6 @@ public class Inflammable : MonoBehaviour {
     }
 
     void UpdateMaterials() {
-
         float myCutoff = 1f - conditionValue / 2000f;
         transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[4].SetFloat("_Cutoff", myCutoff);
         float greyLevel = conditionValue / 1000f;
@@ -138,6 +140,10 @@ public class Inflammable : MonoBehaviour {
 
     bool IsBurning() {
         return fireValue > 15f;
+    }
+
+    public void Watered() {
+        isWatered = true;
     }
 
 }

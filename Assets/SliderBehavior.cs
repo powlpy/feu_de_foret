@@ -18,15 +18,18 @@ public class SliderBehavior : MonoBehaviour {
 
     void SpeedValueChanged() {
 
-        GlobalVariables.Speed = SpeedSlider.value / 2f;
+        GlobalVariables.Speed = SpeedSlider.value;
 
         if (GlobalVariables.Speed == 0f) Time.timeScale = 0;
         else Time.timeScale = 1;
 
         GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
         foreach (GameObject Tree in trees) {
-            Tree.GetComponent<ParticleSystem>().startSpeed = (SpeedSlider.value / 2f) * 5f;
-            Tree.GetComponent<ParticleSystem>().startLifetime = 1.3f / SpeedSlider.value;
+            ParticleSystem myParticleSystem = Tree.GetComponent<ParticleSystem>();
+            if(myParticleSystem != null) {
+                Tree.GetComponent<ParticleSystem>().startSpeed = 1 + SpeedSlider.value;
+                Tree.GetComponent<ParticleSystem>().startLifetime = 1.3f / SpeedSlider.value;
+            }
         }
     }
 
