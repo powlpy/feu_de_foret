@@ -13,7 +13,7 @@ public class Inflammable : MonoBehaviour {
     private List<Inflammable> closeTrees = new List<Inflammable>();     //trees to pass fire to
     private float inflammability;
     private bool isBurnt = false;
-    private bool isWatered = false;
+    private int watered = 0;
 
     void Awake() {
 
@@ -64,7 +64,7 @@ public class Inflammable : MonoBehaviour {
 
         //le feu evolue
         fireValue += (0.005f * fireValue) * (1-inflammability) * GlobalVariables.Speed * (1 - Mathf.Pow(conditionValue - 550, 2) / 200000f);
-        if (isWatered) fireValue -= 0.1f * GlobalVariables.Speed;
+        fireValue -= watered * 0.12f * GlobalVariables.Speed;
         fireValue = Mathf.Clamp(fireValue, 0f, 100f);
 
         bool currentBurning = IsBurning();
@@ -143,7 +143,7 @@ public class Inflammable : MonoBehaviour {
     }
 
     public void Watered() {
-        isWatered = true;
+        watered++;
     }
 
 }

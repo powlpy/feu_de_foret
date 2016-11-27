@@ -6,11 +6,11 @@ public class VehiclesBehavior : MonoBehaviour {
     public GameObject FireTruck;
     public int NbFireTrucks;
 
-    private float fireDistance = 10;
+    private float fireDistance = 20;
 
     public void GoFireTrucks(Vector3 minBounds, Vector3 maxBounds) {
-        minBounds -= new Vector3(20, 0, 20);
-        maxBounds += new Vector3(20, 0, 20);
+        minBounds -= new Vector3(fireDistance, 0, fireDistance);
+        maxBounds += new Vector3(fireDistance, 0, fireDistance);
 
         float boundsWidth = maxBounds.x - minBounds.x;
         float boundsHeight = maxBounds.z - minBounds.z;
@@ -32,7 +32,6 @@ public class VehiclesBehavior : MonoBehaviour {
             GameObject fireTruck = (GameObject)Instantiate(FireTruck);
             minBounds.y = 0.25f;
             fireTruck.transform.position = myPosition;
-            float myAngle = Vector3.Angle(fireTruck.transform.position, boundsCenter);
             fireTruck.transform.LookAt(boundsCenter);
             fireTruck.transform.Rotate(-90f, 0f, -90f);
 

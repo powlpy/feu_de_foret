@@ -3,12 +3,12 @@ using System.Collections;
 
 public class FiretruckBehavior : MonoBehaviour {
 
-    Rigidbody myBody;
     public bool isMoving = true;
     public GameObject WaterStreamFX;
+    private bool isFighting = false;
 
     void Awake() {
-        myBody = GetComponent<Rigidbody>();
+
     }
 
 	// Use this for initialization
@@ -21,7 +21,10 @@ public class FiretruckBehavior : MonoBehaviour {
         //if (GlobalVariables.State == 0) return;
         if (isMoving)
             UpdateMovement();
-
+        /*   fun
+        else 
+            WaterStreamFX.transform.Rotate(new Vector3(0, 0, 1));
+            */
 	}
 
     void UpdateMovement() {
@@ -36,19 +39,30 @@ public class FiretruckBehavior : MonoBehaviour {
     void OnTriggerEnter(Collider collider) {
         if (collider.transform.parent != null)
             if (collider.transform.parent.tag == "Tree")
-                FightFire();
+                FightFire(collider);
     }
 
 
-    void FightFire() {
+    void FightFire(Collider tree) {
+        if (isFighting) return;
+        isFighting = true;
         isMoving = false;
         WaterStreamFX.SetActive(true);
-        Collider waterCollider = WaterStreamFX.GetComponentInChildren<BoxCollider>();
-        foreach (Collider collider in Physics.OverlapSphere(transform.position + transform.right * 20, 7f)) {
+
+        //orienter le jet d'eau vers l'arbre le plus proche
+        float myAngle = Vector3.Angle(transform.right, tree.transform.position - transform.position);
+        if (Vector3.Cross(transform.right, tree.transform.position - transform.position).y < 0)
+            myAngle = -myAngle;
+        WaterStreamFX.transform.Rotate(new Vector3(0, 0, myAngle));
+
+        //Vector3 myCenter = transform.TransformPoint(WaterStreamFX.GetComponent<SphereCollider>().center);
+        Vector3 myCenter = WaterStreamFX.GetComponentInChildren<SphereCollider>().transform.position;
+        foreach (Collider collider in Physics.OverlapSphere(myCenter, 7f)) {
             if (collider.transform.parent != null)
                 if (collider.transform.parent.tag == "Tree")
                     collider.GetComponentInParent<Inflammable>().Watered();
         }
+        
 
     }
 
