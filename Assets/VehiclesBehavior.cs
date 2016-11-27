@@ -24,18 +24,17 @@ public class VehiclesBehavior : MonoBehaviour {
                 myPosition = new Vector3(minBounds.x + randomPerimeterPosition, 0, minBounds.z);
             } else if (randomPerimeterPosition < boundsWidth + boundsHeight) {
                 myPosition = new Vector3(maxBounds.x, 0, minBounds.z + randomPerimeterPosition - boundsWidth);
-            } else if (randomPerimeterPosition < 2 * boundsWidth + boundsWidth) {
-                myPosition = new Vector3(maxBounds.x - randomPerimeterPosition - boundsWidth - boundsHeight, 0, maxBounds.z);
+            } else if (randomPerimeterPosition < 2 * boundsWidth + boundsHeight) {
+                myPosition = new Vector3(maxBounds.x - (randomPerimeterPosition - boundsWidth - boundsHeight), 0, maxBounds.z);
             } else {
                 myPosition = new Vector3(minBounds.x, 0, minBounds.z + (perimeterSize - randomPerimeterPosition));
             }
-            
             GameObject fireTruck = (GameObject)Instantiate(FireTruck);
             minBounds.y = 0.25f;
             fireTruck.transform.position = myPosition;
-            float myAngle = Vector3.Angle(transform.position, boundsCenter);
-            //fireTruck.transform.Rotate(new Vector3(0, myAngle, 0));
-
+            float myAngle = Vector3.Angle(fireTruck.transform.position, boundsCenter);
+            fireTruck.transform.LookAt(boundsCenter);
+            fireTruck.transform.Rotate(-90f, 0f, -90f);
 
         }
 

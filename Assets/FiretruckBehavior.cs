@@ -30,8 +30,6 @@ public class FiretruckBehavior : MonoBehaviour {
 
         transform.position += transform.right * Time.deltaTime * 5 * GlobalVariables.Speed;
 
-        transform.Rotate(new Vector3(0, 0, 0.2f));
-
 
     }
 
