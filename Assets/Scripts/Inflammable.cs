@@ -18,7 +18,6 @@ public class Inflammable : MonoBehaviour {
 
     void Awake() {
 
-
         myStatistics = GameObject.Find("Global").GetComponent<MyStatistics>();
 
         //désactiver les particules
@@ -41,6 +40,13 @@ public class Inflammable : MonoBehaviour {
         //Mettre à jour le nombre d'arbres
         myStatistics.IncrementNbTree();
 
+
+        Vector3 f1 = transform.position;
+        Vector3 direction = new Vector3(Mathf.Cos(GlobalVariables.windDirection), Mathf.Sin(GlobalVariables.windDirection));
+        float focalDist = GlobalVariables.windPower * GlobalVariables.minRadiusFire / 25;
+        Vector3 f2 = f1 + (direction * focalDist);
+        maxDistance = focalDist + GlobalVariables.minRadiusFire; // modification de la distance max
+
         //Tableau contenant les colliders proches
         Collider[] closeColliders = Physics.OverlapSphere(transform.position, maxDistance);
         //Pour chacun d'entre eux
@@ -48,8 +54,12 @@ public class Inflammable : MonoBehaviour {
             //Recuperer le composant inflammable
             Inflammable closeInflammable = closeCollider.GetComponentInParent<Inflammable>();
             if (closeInflammable != null && closeInflammable != this) {     //si non nul et non this
-                AddCloseTree(closeInflammable);         //ajouter le voisin à this
-                closeInflammable.AddCloseTree(this);    //ajouter this au voisin
+
+                if (((f1 - closeInflammable.transform.position).magnitude +
+                    (f2 - closeInflammable.transform.position).magnitude) <= maxDistance) { // s'il se trouve dans l'ellipse
+                    AddCloseTree(closeInflammable);         //ajouter le voisin à this
+                    closeInflammable.AddCloseTree(this);    //ajouter this au voisin
+                }
             }
         }
     }
