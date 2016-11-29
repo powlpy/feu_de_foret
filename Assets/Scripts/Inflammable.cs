@@ -15,6 +15,7 @@ public class Inflammable : MonoBehaviour {
     private bool isBurnt = false;
     private int watered = 0;
     private int status = 0; //0: intact, 1: damaged, 2: burnt
+    private bool isMarked = false;
 
     void Awake() {
 
@@ -38,12 +39,13 @@ public class Inflammable : MonoBehaviour {
     void Start() {
         //Mettre à jour le nombre d'arbres
         myStatistics.IncrementNbTree();
+
         Vector3 f1 = transform.position;
         Vector3 direction = new Vector3(Mathf.Cos(GlobalVariables.windDirection), Mathf.Sin(GlobalVariables.windDirection));
         float focalDist = GlobalVariables.windPower * GlobalVariables.minRadiusFire / 25;
         Vector3 f2 = f1 + (direction * focalDist);
-        maxDistance = focalDist + GlobalVariables.minRadiusFire; // modification de la distance max
-                                                                 //Tableau contenant les colliders proches
+        float maxDistance = focalDist + GlobalVariables.minRadiusFire; // modification de la distance max
+                                                                       //Tableau contenant les colliders proches
         Collider[] closeColliders = Physics.OverlapSphere(transform.position, maxDistance);
         //Pour chacun d'entre eux
         foreach (Collider closeCollider in closeColliders) {
@@ -53,13 +55,14 @@ public class Inflammable : MonoBehaviour {
 
                 if (((f1 - closeInflammable.transform.position).magnitude +
                     (f2 - closeInflammable.transform.position).magnitude) <= maxDistance) { // s'il se trouve dans l'ellipse
-                    AddCloseTree(closeInflammable);         //ajouter le voisin à this
+                    AddCloseTree(closeInflammable);
                 }
+
                 Vector3 of1 = closeInflammable.transform.position;
                 Vector3 of2 = of1 + (direction * focalDist);
                 if (((of1 - transform.position).magnitude +
                     (of2 - transform.position).magnitude) <= maxDistance) {
-                    closeInflammable.AddCloseTree(this);    //ajouter this au voisin
+                    closeInflammable.AddCloseTree(this);
                 }
             }
         }
@@ -68,6 +71,7 @@ public class Inflammable : MonoBehaviour {
 
     void Update() {
         if (GlobalVariables.State == 0) return;
+        if (isMarked) return;
         if (isBurnt) return;
         UpdateFire();
         RenderFire();
@@ -169,6 +173,13 @@ public class Inflammable : MonoBehaviour {
             status = 2;
             myStatistics.AddBurnt();
         }
+    }
+
+    public void Mark(float r, float g, float b) {
+        if (isMarked) return;
+        isMarked = true;
+        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[4].color = new Color(r, g, b, 1f);
+
     }
 
 }

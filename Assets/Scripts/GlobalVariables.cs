@@ -7,16 +7,15 @@ public class GlobalVariables : MonoBehaviour {
     public static int State = 0;
     public static Bounds boundingBox;
 
-    public static float windPower = 250f; // in km
+    public static float windPower = 20f; // in km
     public static float windDirection = 0f; // in radian
-    public static float minRadiusFire = 5f; // minimal distance of fire radius
+    public static float minRadiusFire = 25f; // minimal distance of fire radius
 
     public static void NextState() {
         if (State == 0) {
             NextState0to1();
         }
     }
-
 
     void OnDrawGizmos() {
         if (State > 0) {
