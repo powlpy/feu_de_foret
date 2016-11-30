@@ -4,12 +4,9 @@ using System.Collections;
 public class CameraBehavior : MonoBehaviour {
 
     float minFov = 10f;
-    float maxFov = 110f;
+    float maxFov = 90f;
     float sensitivityScroll = 20f;
-    float sensitivityMove = 10f;
-
-    public float dragSpeed = 2;
-    private Vector3 dragOrigin;
+    float sensitivityMove = 20f;
 
 
     void LateUpdate () {

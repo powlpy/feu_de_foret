@@ -20,20 +20,24 @@ public class Inflammable : MonoBehaviour {
 
     void Awake() {
 
+        inflammability = Random.Range(0.8f, 1.15f);
+
         myStatistics = GameObject.Find("Global").GetComponent<MyStatistics>();
 
         //désactiver les particules
         myFireEffect = gameObject.GetComponent<ParticleSystem>();
         myFireEffect.Stop();
+
+        UpdateQuality();
+
         
-        //random z-axis rotation pour plus de diversité
+        //random Z-axis rotation pour plus de diversité
         transform.Find("Visual").Rotate(0.0f, 0.0f, Random.Range(0.0f, 360.0f));
 
         //random scale pour plus de diversité
-        float mySize = Random.Range(-2f, 2f);
+        float mySize = Random.Range(-0.1f, 0.1f);
         transform.Find("Visual").localScale += new Vector3(mySize, mySize, mySize);
-
-        inflammability = Random.Range(0.8f, 1.15f);
+        
     }
 
 
@@ -123,13 +127,21 @@ public class Inflammable : MonoBehaviour {
 
     void UpdateMaterials() {
         if (isMarked) return;
-        float myCutoff = 1f - conditionValue / 2000f;
-        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[4].SetFloat("_Cutoff", myCutoff);
-        float greyLevel = conditionValue / 1000f;
-        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[0].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
-        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[1].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
-        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[2].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
-        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[3].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+        if (GlobalVariables.HighQuality) {
+            GameObject visual = transform.Find("Visual").Find("HQ").gameObject;
+            float myCutoff = 1f - conditionValue / 2000f;
+            visual.GetComponent<Renderer>().materials[4].SetFloat("_Cutoff", myCutoff);
+            float greyLevel = conditionValue / 1000f;
+            visual.GetComponent<Renderer>().materials[0].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+            visual.GetComponent<Renderer>().materials[1].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+            visual.GetComponent<Renderer>().materials[2].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+            visual.GetComponent<Renderer>().materials[3].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+        } else {
+            GameObject visual = transform.Find("Visual").Find("LQ").gameObject;
+            float greenLevel = conditionValue / 2000f;
+            visual.GetComponent<Renderer>().materials[0].color = new Color(0, greenLevel, 0, 1f);
+
+        }
 
     }
 
@@ -140,6 +152,13 @@ public class Inflammable : MonoBehaviour {
         fireValue += (foreignFire * 0.0002f) * GlobalVariables.Speed * (maxDistance - distance) / maxDistance;
         fireValue = Mathf.Clamp(fireValue, 0f, 100f);
 
+    }
+    
+    public void UpdateQuality() {
+        bool hq = GlobalVariables.HighQuality;
+
+        transform.Find("Visual").Find("HQ").gameObject.SetActive(hq);
+        transform.Find("Visual").Find("LQ").gameObject.SetActive(!hq);
     }
 
     public void AddCloseTree(Inflammable closeTree) {
@@ -184,7 +203,7 @@ public class Inflammable : MonoBehaviour {
     public void Mark(float r, float g, float b) {
         if (isMarked) return;
         isMarked = true;
-        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[4].color = new Color(r, g, b, 1f);
+        transform.Find("HQ").gameObject.GetComponent<Renderer>().materials[4].color = new Color(r, g, b, 1f);
 
     }
 

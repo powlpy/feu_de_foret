@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class GlobalVariables : MonoBehaviour {
-    
+
+    public static bool HighQuality = true;
     public static float Speed = 1f;
     public static int State = 0;
     public static Bounds boundingBox;

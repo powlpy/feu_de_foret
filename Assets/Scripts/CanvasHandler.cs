@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class CanvasHandler : MonoBehaviour {
 
@@ -8,6 +9,9 @@ public class CanvasHandler : MonoBehaviour {
     public GameObject SliderTreesCreated;
     public GameObject Firefighters;
     public GameObject Setups;
+
+    public GameObject HQButton;
+    public GameObject LQButton;
 
     void Start () {
         Firefighters.SetActive(false);
@@ -25,4 +29,32 @@ public class CanvasHandler : MonoBehaviour {
 
 
     }
+
+    public void GoHQ() {
+
+        HQButton.GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.8f);
+        LQButton.GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.4f);
+        GlobalVariables.HighQuality = true;
+        ChangeTreesQuality();
+        ChangeTerrainQuality();
+    }
+
+    public void GoLQ() {
+
+        LQButton.GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.8f);
+        HQButton.GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.4f);
+        GlobalVariables.HighQuality = false;
+        ChangeTreesQuality();
+        ChangeTerrainQuality();
+    }
+
+    void ChangeTreesQuality() {
+        foreach (GameObject tree in GameObject.FindGameObjectsWithTag("Tree"))
+            tree.GetComponent<Inflammable>().UpdateQuality();
+    }
+
+    void ChangeTerrainQuality() {
+        GameObject.Find("Terrain").GetComponent<TerrainHandler>().UpdateQuality();
+    }
+
 }

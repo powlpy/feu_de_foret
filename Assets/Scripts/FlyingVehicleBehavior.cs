@@ -35,11 +35,10 @@ public class FlyingVehicleBehavior : MonoBehaviour {
             currentBombardmentPosition.y = 0;
             foreach (Collider collider in Physics.OverlapSphere(currentBombardmentPosition, 7f)) {
                 if (collider.transform.parent != null)
-                    if (collider.transform.parent.tag == "Tree") {
-                        collider.GetComponentInParent<Inflammable>().WateredHelicopter();
-
-                    }
-
+                    if (collider.transform.parent.parent != null)
+                        if (collider.transform.parent.parent.tag == "Tree")
+                            collider.GetComponentInParent<Inflammable>().WateredHelicopter();
+                
             }
         }
 

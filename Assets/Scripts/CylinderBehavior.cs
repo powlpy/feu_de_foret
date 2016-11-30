@@ -3,13 +3,15 @@ using System.Collections;
 
 public class CylinderBehavior : MonoBehaviour {
 
-    public Terrain myTerrain;
+    public GameObject myTerrain;
     public float Radius;
     RaycastHit hit;
-    public GameObject TreePrefab1;
     public int NbTreesCreated = 10;
 
+    public GameObject TreePrefab;
+
     void Start() {
+
         Resize();
 
         /*
@@ -24,7 +26,7 @@ public class CylinderBehavior : MonoBehaviour {
     void Update() {
         
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (myTerrain.GetComponent<Collider>().Raycast(ray, out hit, Mathf.Infinity)) {
+        if (myTerrain.GetComponentInChildren<Collider>().Raycast(ray, out hit, Mathf.Infinity)) {
             transform.position = hit.point;
         }
         
@@ -72,7 +74,7 @@ public class CylinderBehavior : MonoBehaviour {
             float x = hit.point.x + Random.Range(-Radius, Radius);
             float z = hit.point.z + Random.Range(-Radius, Radius);
 
-            GameObject newTree = (GameObject)Instantiate(TreePrefab1);
+            GameObject newTree = (GameObject)Instantiate(TreePrefab);
             newTree.transform.position = new Vector3(x, hit.point.y, z);
 
         }

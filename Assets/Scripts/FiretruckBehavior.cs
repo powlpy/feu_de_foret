@@ -38,7 +38,8 @@ public class FiretruckBehavior : MonoBehaviour {
 
     void OnTriggerEnter(Collider collider) {
         if (collider.transform.parent != null)
-            if (collider.transform.parent.tag == "Tree")
+            if (collider.transform.parent.parent != null)
+                if (collider.transform.parent.parent.tag == "Tree")
                 FightFire(collider);
     }
 
@@ -59,8 +60,9 @@ public class FiretruckBehavior : MonoBehaviour {
         Vector3 myCenter = WaterStreamFX.GetComponentInChildren<SphereCollider>().transform.position;
         foreach (Collider collider in Physics.OverlapSphere(myCenter, 7f)) {
             if (collider.transform.parent != null)
-                if (collider.transform.parent.tag == "Tree")
-                    collider.GetComponentInParent<Inflammable>().Watered();
+                if (collider.transform.parent.parent != null)
+                    if (collider.transform.parent.parent.tag == "Tree")
+                        collider.GetComponentInParent<Inflammable>().Watered();
         }
         
 
