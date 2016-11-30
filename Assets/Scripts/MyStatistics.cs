@@ -19,9 +19,16 @@ public class MyStatistics : MonoBehaviour {
     }
 
     public void Start() {
+        Reset();
         UpdateStats();
     }
-    
+
+    public void Reset() {
+        NbTrees = 0;
+        NbDamagedTrees = 0;
+        NbDamagedTrees = 0;
+    }
+
     public void IncrementNbTree() {
         NbTrees++;
         UpdateNbTree();
@@ -83,5 +90,7 @@ public class MyStatistics : MonoBehaviour {
         }
         return percentage.ToString() + " %";
     }
+
+
 
 }

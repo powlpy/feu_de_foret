@@ -14,6 +14,7 @@ public class Inflammable : MonoBehaviour {
     private float inflammability;
     private bool isBurnt = false;
     private int watered = 0;
+    private float flyingWatered = 0;
     private int status = 0; //0: intact, 1: damaged, 2: burnt
     private bool isMarked = false;
 
@@ -32,7 +33,7 @@ public class Inflammable : MonoBehaviour {
         float mySize = Random.Range(-2f, 2f);
         transform.Find("Visual").localScale += new Vector3(mySize, mySize, mySize);
 
-        inflammability = Random.Range(1.1f, 1.35f);
+        inflammability = Random.Range(0.8f, 1.15f);
     }
 
 
@@ -40,38 +41,12 @@ public class Inflammable : MonoBehaviour {
         //Mettre à jour le nombre d'arbres
         myStatistics.IncrementNbTree();
 
-        Vector3 f1 = transform.position;
-        Vector3 direction = new Vector3(Mathf.Cos(GlobalVariables.windDirection), Mathf.Sin(GlobalVariables.windDirection));
-        float focalDist = GlobalVariables.windPower * GlobalVariables.minRadiusFire / 25;
-        Vector3 f2 = f1 + (direction * focalDist);
-        float maxDistance = focalDist + GlobalVariables.minRadiusFire; // modification de la distance max
-                                                                       //Tableau contenant les colliders proches
-        Collider[] closeColliders = Physics.OverlapSphere(transform.position, maxDistance);
-        //Pour chacun d'entre eux
-        foreach (Collider closeCollider in closeColliders) {
-            //Recuperer le composant inflammable
-            Inflammable closeInflammable = closeCollider.GetComponentInParent<Inflammable>();
-            if (closeInflammable != null && closeInflammable != this) {     //si non nul et non this
-
-                if (((f1 - closeInflammable.transform.position).magnitude +
-                    (f2 - closeInflammable.transform.position).magnitude) <= maxDistance) { // s'il se trouve dans l'ellipse
-                    AddCloseTree(closeInflammable);
-                }
-
-                Vector3 of1 = closeInflammable.transform.position;
-                Vector3 of2 = of1 + (direction * focalDist);
-                if (((of1 - transform.position).magnitude +
-                    (of2 - transform.position).magnitude) <= maxDistance) {
-                    closeInflammable.AddCloseTree(this);
-                }
-            }
-        }
+        ComputeNeighbors();
     }
 
 
     void Update() {
         if (GlobalVariables.State == 0) return;
-        if (isMarked) return;
         if (isBurnt) return;
         UpdateFire();
         RenderFire();
@@ -80,8 +55,22 @@ public class Inflammable : MonoBehaviour {
     void UpdateFire() {
 
         //le feu evolue
-        fireValue += (0.005f * fireValue) * (1-inflammability) * GlobalVariables.Speed * (1 - Mathf.Pow(conditionValue - 550, 2) / 200000f);
-        fireValue -= watered * 0.12f * GlobalVariables.Speed;
+        float deltaFire = (0.01f * fireValue) * GlobalVariables.Speed;
+        deltaFire *= (1 - Mathf.Pow(conditionValue - 550, 2) / 200000f);
+        if(deltaFire > 0)
+            deltaFire -= (1 - inflammability) * deltaFire;
+        else
+            deltaFire += (1 - inflammability) * deltaFire;
+
+        fireValue += deltaFire;
+        if (flyingWatered > 0.1) {
+            fireValue -= flyingWatered * 0.02f * GlobalVariables.Speed;
+            flyingWatered -= 0.1f;
+        }
+        if(watered > 0) {
+            fireValue -= watered * 0.1f * GlobalVariables.Speed;
+
+        }
         fireValue = Mathf.Clamp(fireValue, 0f, 100f);
 
         bool currentBurning = IsBurning();
@@ -89,9 +78,14 @@ public class Inflammable : MonoBehaviour {
         else if (!currentBurning && wasBurning) StopFire();
         wasBurning = currentBurning;
 
+        if (fireValue < 1) return;
+
         //Le feu se répand aux voisins
-        foreach (Inflammable closeTree in closeTrees)
-            closeTree.PassFire(this);
+        foreach (Inflammable closeTree in closeTrees) {
+            if(closeTree != null)
+                closeTree.PassFire(this);
+
+        }
 
         //L'arbre se dégrade
         if (IsBurning()) {
@@ -109,7 +103,8 @@ public class Inflammable : MonoBehaviour {
 
     void RenderFire() {
         if (!IsBurning()) return;
-        myFireEffect.startLifetime = (1f * fireValue / 100f) / GlobalVariables.Speed;
+        if(GlobalVariables.Speed > 0)
+            myFireEffect.startLifetime = (1f * fireValue / 100f) / GlobalVariables.Speed;
 
         UpdateMaterials();
 
@@ -127,6 +122,7 @@ public class Inflammable : MonoBehaviour {
     }
 
     void UpdateMaterials() {
+        if (isMarked) return;
         float myCutoff = 1f - conditionValue / 2000f;
         transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[4].SetFloat("_Cutoff", myCutoff);
         float greyLevel = conditionValue / 1000f;
@@ -137,13 +133,11 @@ public class Inflammable : MonoBehaviour {
 
     }
 
-    //Reçoit le feu de ses voisins
+    //Reçoit le feu de son voisin
     public void PassFire(Inflammable foreignTree) {
-
         float foreignFire = foreignTree.GetComponent<Inflammable>().fireValue;
         float distance = Vector3.Distance(gameObject.transform.position, foreignTree.GetComponentInChildren<Collider>().ClosestPointOnBounds(gameObject.transform.position));
-
-        fireValue += (foreignFire * 0.0001f) * inflammability * GlobalVariables.Speed * (maxDistance - distance) / maxDistance;
+        fireValue += (foreignFire * 0.0002f) * GlobalVariables.Speed * (maxDistance - distance) / maxDistance;
         fireValue = Mathf.Clamp(fireValue, 0f, 100f);
 
     }
@@ -165,6 +159,18 @@ public class Inflammable : MonoBehaviour {
         watered++;
     }
 
+    public void WateredHelicopter() {
+        StartCoroutine(DelayedWatered());
+    }
+
+    IEnumerator DelayedWatered() {
+        yield return new WaitForSeconds(2f);
+        flyingWatered++;
+    }
+
+
+
+
     void UpdateStats() {
         if(status == 0 && conditionValue < 850) {
             status = 1;
@@ -180,6 +186,36 @@ public class Inflammable : MonoBehaviour {
         isMarked = true;
         transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[4].color = new Color(r, g, b, 1f);
 
+    }
+
+    public void ComputeNeighbors() {
+
+        Vector3 f1 = transform.position;
+        Vector3 direction = new Vector3(Mathf.Cos(GlobalVariables.windDirection), Mathf.Sin(GlobalVariables.windDirection));
+        float focalDist = GlobalVariables.windPower * GlobalVariables.minRadiusFire / 25;
+        Vector3 f2 = f1 + (direction * focalDist);
+        maxDistance = focalDist + GlobalVariables.minRadiusFire; // modification de la distance max
+                                                                 //Tableau contenant les colliders proches
+        Collider[] closeColliders = Physics.OverlapSphere(transform.position, maxDistance);
+        //Pour chacun d'entre eux
+        foreach (Collider closeCollider in closeColliders) {
+            //Recuperer le composant inflammable
+            Inflammable closeInflammable = closeCollider.GetComponentInParent<Inflammable>();
+            if (closeInflammable != null && closeInflammable != this) {     //si non nul et non this
+
+                if (((f1 - closeInflammable.transform.position).magnitude +
+                    (f2 - closeInflammable.transform.position).magnitude) <= maxDistance) { // s'il se trouve dans l'ellipse
+                    AddCloseTree(closeInflammable);
+                }
+
+                Vector3 of1 = closeInflammable.transform.position;
+                Vector3 of2 = of1 + (direction * focalDist);
+                if (((of1 - transform.position).magnitude +
+                    (of2 - transform.position).magnitude) <= maxDistance) {
+                    closeInflammable.AddCloseTree(this);
+                }
+            }
+        }
     }
 
 }

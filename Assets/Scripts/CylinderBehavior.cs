@@ -12,11 +12,12 @@ public class CylinderBehavior : MonoBehaviour {
     void Start() {
         Resize();
 
+        /*
         for (int i = 700; i < 800; i += 4)
             for (int j = 600; j < 700; j += 4) {
                 GameObject newTree = (GameObject)Instantiate(TreePrefab1);
                 newTree.transform.position = new Vector3(i, 0.2f, j);
-            }
+            }*/
 
     }
 
@@ -54,6 +55,7 @@ public class CylinderBehavior : MonoBehaviour {
 
             closeInflammable.Ignite();
             fireStarted = true;
+            GlobalVariables.SetFirePoint(transform.position);
         }
 
         if (fireStarted) {

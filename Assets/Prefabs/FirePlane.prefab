@@ -945,5 +945,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6617e31eb4e8af4c89abd8c6a3b54fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
+  vehicleType: 1
   WaterStreamFX: {fileID: 1000010125642178}

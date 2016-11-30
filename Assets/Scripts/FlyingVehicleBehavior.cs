@@ -1,8 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum FlyingVehicle{
+    Helicopter,
+    Plane
+}
+
 public class FlyingVehicleBehavior : MonoBehaviour {
-    public float speed; 
+    public FlyingVehicle vehicleType;
+    private float speed; 
     public GameObject WaterStreamFX;
     private bool isBombarding = false;
     private bool isEmpty = false;
@@ -11,6 +17,10 @@ public class FlyingVehicleBehavior : MonoBehaviour {
 
     void Start() {
         bombardmentDistance = 20f;
+        if (vehicleType == FlyingVehicle.Helicopter)
+            speed = 15;
+        else
+            speed = 30;
     }
     
     void Update() {
@@ -19,6 +29,19 @@ public class FlyingVehicleBehavior : MonoBehaviour {
             CheckDestroyDistance();
         else
             CheckBombardmentDistance();
+
+        if (isBombarding) {
+            Vector3 currentBombardmentPosition = transform.position;
+            currentBombardmentPosition.y = 0;
+            foreach (Collider collider in Physics.OverlapSphere(currentBombardmentPosition, 7f)) {
+                if (collider.transform.parent != null)
+                    if (collider.transform.parent.tag == "Tree") {
+                        collider.GetComponentInParent<Inflammable>().WateredHelicopter();
+
+                    }
+
+            }
+        }
 
     }
 
@@ -29,7 +52,7 @@ public class FlyingVehicleBehavior : MonoBehaviour {
     }
 
     void CheckBombardmentDistance() {
-        if (bombardmentLocation == null) return;
+        if (bombardmentLocation == Vector3.zero) return;
         Vector2 myPosition2D = new Vector2(transform.position.x, transform.position.z);
         Vector2 bombardmentPosition2D = new Vector2(bombardmentLocation.x, bombardmentLocation.z);
         float myDistance = Vector2.Distance(myPosition2D, bombardmentPosition2D);
@@ -40,7 +63,7 @@ public class FlyingVehicleBehavior : MonoBehaviour {
     }
 
     void CheckDestroyDistance() {
-        if (bombardmentLocation == null) return;
+        if (bombardmentLocation == Vector3.zero) return;
         Vector2 myPosition2D = new Vector2(transform.position.x, transform.position.z);
         Vector2 bombardmentPosition2D = new Vector2(bombardmentLocation.x, bombardmentLocation.z);
         float myDistance = Vector2.Distance(myPosition2D, bombardmentPosition2D);
@@ -51,7 +74,6 @@ public class FlyingVehicleBehavior : MonoBehaviour {
     void StartBombarding() {
         isBombarding = true;
         WaterStreamFX.SetActive(true);
-        Debug.Log(this);
     }
 
     public void SetBombardmentLocation(Vector3 bombardmentPoint) {
@@ -63,5 +85,6 @@ public class FlyingVehicleBehavior : MonoBehaviour {
         WaterStreamFX.GetComponentInChildren<EllipsoidParticleEmitter>().emit = false;
         isEmpty = true;
     }
+
 
 }

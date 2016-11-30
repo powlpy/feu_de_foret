@@ -7,9 +7,14 @@ public class GlobalVariables : MonoBehaviour {
     public static int State = 0;
     public static Bounds boundingBox;
 
-    public static float windPower = 20f; // in km
+    public static float windPower = 40f; // in km
     public static float windDirection = 0f; // in radian
-    public static float minRadiusFire = 25f; // minimal distance of fire radius
+    public static float minRadiusFire = 10f; // minimal distance of fire radius
+
+    private static Vector3 boundingBoxMin;
+    private static Vector3 boundingBoxMax;
+
+    private static Vector3 firePoint;
 
     public static void NextState() {
         if (State == 0) {
@@ -17,19 +22,18 @@ public class GlobalVariables : MonoBehaviour {
         }
     }
 
+    /*
     void OnDrawGizmos() {
         if (State > 0) {
             Gizmos.color = new Color(0.8f, 0.8f, 0.4f, 0.5F);
             Gizmos.DrawCube(boundingBox.center, boundingBox.size);
 
         }
-    }
+    }*/
 
     static void NextState0to1() {
         State = 1;
-        GameObject.Find("Instructions").SetActive(false);
-        GameObject.Find("SliderSizeCircle").SetActive(false);
-        GameObject.Find("SliderNbTreesCreated").SetActive(false);
+        GameObject.Find("Canvas").GetComponentInChildren<CanvasHandler>().StartSimulation();
 
 
         GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
@@ -42,9 +46,27 @@ public class GlobalVariables : MonoBehaviour {
         newSize.x += 10;
         newSize.z += 10;
         boundingBox.size = newSize;
-        GameObject.Find("Global").GetComponent<VehiclesBehavior>().GoFireTrucks(boundingBox.min, boundingBox.max);
-        GameObject.Find("Global").GetComponent<VehiclesBehavior>().GoHelicopters(boundingBox.min, boundingBox.max);
-        GameObject.Find("Global").GetComponent<VehiclesBehavior>().GoPlanes(boundingBox.min, boundingBox.max);
+
+        boundingBoxMin = boundingBox.min;
+        boundingBoxMax = boundingBox.max;
     }
-    
+
+    public static Vector3 GetBoundingBoxMin() {
+        return boundingBoxMin;
+    }
+
+
+    public static Vector3 GetBoundingBoxMax() {
+        return boundingBoxMax;
+    }
+
+    public static void SetFirePoint(Vector3 fp) {
+        firePoint = fp;
+    }
+
+    public static Vector3 GetFirePoint() {
+        return firePoint;
+    }
+
 }
+
