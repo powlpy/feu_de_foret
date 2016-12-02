@@ -25,20 +25,17 @@ public class FlyingVehicleBehavior : MonoBehaviour {
     
     void Update() {
         UpdateMovement();
-        if (isEmpty)
-            CheckDestroyDistance();
-        else
-            CheckBombardmentDistance();
+        if (isEmpty) return;
 
+        CheckBombardmentDistance();
         if (isBombarding) {
             Vector3 currentBombardmentPosition = transform.position;
             currentBombardmentPosition.y = 0;
             foreach (Collider collider in Physics.OverlapSphere(currentBombardmentPosition, 7f)) {
                 if (collider.transform.parent != null)
-                    if (collider.transform.parent.parent != null)
-                        if (collider.transform.parent.parent.tag == "Tree")
-                            collider.GetComponentInParent<Inflammable>().WateredHelicopter();
-                
+                    if (collider.transform.parent.tag == "Tree")
+                        collider.GetComponentInParent<Inflammable>().WateredHelicopter();
+
             }
         }
 
@@ -57,8 +54,11 @@ public class FlyingVehicleBehavior : MonoBehaviour {
         float myDistance = Vector2.Distance(myPosition2D, bombardmentPosition2D);
         if (!isBombarding && myDistance < bombardmentDistance)
             StartBombarding();
-        else if (isBombarding && myDistance > bombardmentDistance)
+        else if (isBombarding && myDistance > bombardmentDistance) {
             StopBombarding();
+            StartCoroutine(DelayedDestroy(4));
+
+        }
     }
 
     void CheckDestroyDistance() {
@@ -85,5 +85,9 @@ public class FlyingVehicleBehavior : MonoBehaviour {
         isEmpty = true;
     }
 
+    IEnumerator DelayedDestroy(float s) {
+        yield return new WaitForSeconds(s);
+        Destroy(this.gameObject);
+    }
 
 }

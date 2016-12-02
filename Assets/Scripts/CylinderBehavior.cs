@@ -24,17 +24,27 @@ public class CylinderBehavior : MonoBehaviour {
     }
 
     void Update() {
-        
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (myTerrain.GetComponentInChildren<Collider>().Raycast(ray, out hit, Mathf.Infinity)) {
-            transform.position = hit.point;
-        }
-        
-        if (Input.GetMouseButtonDown(1)) {
-            StartFire();
-        }
-        if (Input.GetMouseButtonDown(2)) {
-            DrawTrees();
+
+        if (GlobalVariables.State == 0) {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (myTerrain.GetComponentInChildren<Collider>().Raycast(ray, out hit, Mathf.Infinity)) {
+                transform.position = hit.point;
+            }
+
+            if (Input.GetMouseButtonDown(1)) {
+                StartFire();
+            }
+            if (Input.GetMouseButtonDown(2)) {
+                DrawTrees();
+            }
+        } else {
+            if (Input.GetMouseButtonDown(1)) {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (myTerrain.GetComponentInChildren<Collider>().Raycast(ray, out hit, Mathf.Infinity)) {
+                    transform.position = hit.point;
+                }
+
+            }
         }
     }
 
@@ -61,8 +71,11 @@ public class CylinderBehavior : MonoBehaviour {
         }
 
         if (fireStarted) {
-            this.transform.position = Vector3.zero;
-            gameObject.SetActive(false);
+            //this.transform.position = Vector3.zero;
+            //gameObject.SetActive(false);
+            GetComponent<Renderer>().materials[0].color = new Color(0,0,1,0.267f);
+            Radius = 2;
+            Resize();
             GlobalVariables.NextState();
         }
 

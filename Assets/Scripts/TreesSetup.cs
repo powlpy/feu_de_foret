@@ -33,6 +33,7 @@ public class TreesSetup : MonoBehaviour {
         Random.InitState(45);
         int i = 0;
         while (i < nbTreesSetup[setup]) {
+            
             float randX = Random.value;
             float randZ = Random.value;
             randX *= sizeSetup[setup];
@@ -47,8 +48,10 @@ public class TreesSetup : MonoBehaviour {
                 newTree.transform.position = new Vector3(randX, 0.2f, randZ);
                 i++;
             }
-            GetComponent<MyStatistics>().Reset();
+
         }
+            GetComponent<MyStatistics>().Reset();
     }
+    
 
 }

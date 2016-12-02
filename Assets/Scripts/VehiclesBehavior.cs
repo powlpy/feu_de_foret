@@ -40,72 +40,35 @@ public class VehiclesBehavior : MonoBehaviour {
 
     }
 
-    public void GoHelicopters() {
+    public void GoFlyingVehicle(int type) {
+
         if (GlobalVariables.State == 0) return;
-        Vector3 minBounds = GlobalVariables.GetBoundingBoxMin();
-        Vector3 maxBounds = GlobalVariables.GetBoundingBoxMax();
-        minBounds -= new Vector3(fireDistance, 0, fireDistance);
-        maxBounds += new Vector3(fireDistance, 0, fireDistance);
 
-        float boundsWidth = maxBounds.x - minBounds.x;
-        float boundsHeight = maxBounds.z - minBounds.z;
-        float perimeterSize = 2 * (boundsWidth + boundsHeight);
+        GameObject myPrefab;
+        if (type == 0) myPrefab = FireHelicopter;
+        else myPrefab = FirePlane;
 
-        float myPerimeterPosition = Random.Range(0, perimeterSize);
-        Vector3 myPosition;
-        if (myPerimeterPosition < boundsWidth) {
-            myPosition = new Vector3(minBounds.x + myPerimeterPosition, 0, minBounds.z);
-        } else if (myPerimeterPosition < boundsWidth + boundsHeight) {
-            myPosition = new Vector3(maxBounds.x, 0, minBounds.z + myPerimeterPosition - boundsWidth);
-        } else if (myPerimeterPosition < 2 * boundsWidth + boundsHeight) {
-            myPosition = new Vector3(maxBounds.x - (myPerimeterPosition - boundsWidth - boundsHeight), 0, maxBounds.z);
-        } else {
-            myPosition = new Vector3(minBounds.x, 0, minBounds.z + (perimeterSize - myPerimeterPosition));
-        }
-        GameObject fireHelicopter = (GameObject)Instantiate(FireHelicopter);
+        Vector3 bombardmentPosition = GameObject.Find("Cylinder").transform.position;
+
+        GameObject flyingVehicle = (GameObject)Instantiate(myPrefab);
+        Vector3 myPosition = RandomCircle(bombardmentPosition, 75f);
         myPosition.y = 15f;
-        fireHelicopter.transform.position = myPosition;
-        fireHelicopter.transform.LookAt(GlobalVariables.GetFirePoint());
-        Quaternion myRotation = fireHelicopter.transform.rotation;
+        flyingVehicle.transform.position = myPosition;
+        flyingVehicle.transform.LookAt(bombardmentPosition);
+        Quaternion myRotation = flyingVehicle.transform.rotation;
         myRotation.x = 0f;
         myRotation.z = 0f;
-        fireHelicopter.transform.rotation = myRotation;
-        fireHelicopter.GetComponent<FlyingVehicleBehavior>().SetBombardmentLocation(GlobalVariables.GetFirePoint());
-
+        flyingVehicle.transform.rotation = myRotation;
+        flyingVehicle.GetComponent<FlyingVehicleBehavior>().SetBombardmentLocation(bombardmentPosition);
     }
 
-    public void GoPlanes() {
-        if (GlobalVariables.State == 0) return;
-        Vector3 minBounds = GlobalVariables.GetBoundingBoxMin();
-        Vector3 maxBounds = GlobalVariables.GetBoundingBoxMax();
-        minBounds -= new Vector3(fireDistance, 0, fireDistance);
-        maxBounds += new Vector3(fireDistance, 0, fireDistance);
-
-        float boundsWidth = maxBounds.x - minBounds.x;
-        float boundsHeight = maxBounds.z - minBounds.z;
-        float perimeterSize = 2 * (boundsWidth + boundsHeight);
-
-        float myPerimeterPosition = Random.Range(0, perimeterSize);
-        Vector3 myPosition;
-        if (myPerimeterPosition < boundsWidth) {
-            myPosition = new Vector3(minBounds.x + myPerimeterPosition, 0, minBounds.z);
-        } else if (myPerimeterPosition < boundsWidth + boundsHeight) {
-            myPosition = new Vector3(maxBounds.x, 0, minBounds.z + myPerimeterPosition - boundsWidth);
-        } else if (myPerimeterPosition < 2 * boundsWidth + boundsHeight) {
-            myPosition = new Vector3(maxBounds.x - (myPerimeterPosition - boundsWidth - boundsHeight), 0, maxBounds.z);
-        } else {
-            myPosition = new Vector3(minBounds.x, 0, minBounds.z + (perimeterSize - myPerimeterPosition));
-        }
-        GameObject firePlane = (GameObject)Instantiate(FirePlane);
-            myPosition.y = 15f;
-            firePlane.transform.position = myPosition;
-            firePlane.transform.LookAt(GlobalVariables.GetFirePoint());
-            Quaternion myRotation = firePlane.transform.rotation;
-            myRotation.x = 0f;
-            myRotation.z = 0f;
-            firePlane.transform.rotation = myRotation;
-            firePlane.GetComponent<FlyingVehicleBehavior>().SetBombardmentLocation(GlobalVariables.GetFirePoint());
-
+    Vector3 RandomCircle(Vector3 center, float radius) {
+        float ang = Random.value * 360;
+        Vector3 pos;
+        pos.x = center.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
+        pos.y = center.y;
+        pos.z = center.z + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
+        return pos;
     }
 
 }

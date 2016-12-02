@@ -36,7 +36,7 @@ public class CanvasHandler : MonoBehaviour {
         LQButton.GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.4f);
         GlobalVariables.HighQuality = true;
         ChangeTreesQuality();
-        ChangeTerrainQuality();
+        //ChangeTerrainQuality();
     }
 
     public void GoLQ() {
@@ -45,7 +45,7 @@ public class CanvasHandler : MonoBehaviour {
         HQButton.GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.4f);
         GlobalVariables.HighQuality = false;
         ChangeTreesQuality();
-        ChangeTerrainQuality();
+        //ChangeTerrainQuality();
     }
 
     void ChangeTreesQuality() {
@@ -54,7 +54,6 @@ public class CanvasHandler : MonoBehaviour {
     }
 
     void ChangeTerrainQuality() {
-        GameObject.Find("Terrain").GetComponent<TerrainHandler>().UpdateQuality();
-    }
+        GameObject.Find("Terrain").GetComponent<TerrainHandler>().UpdateQuality();    }
 
 }

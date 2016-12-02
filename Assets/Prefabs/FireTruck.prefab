@@ -293,7 +293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96c7760e7181b9e4fbe3eb241061edd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isMoving: 1
+  speed: 10
   WaterStreamFX: {fileID: 1000012898282768}
 --- !u!135 &135000011686241196
 SphereCollider:

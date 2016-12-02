@@ -68,11 +68,13 @@ public class Inflammable : MonoBehaviour {
 
         fireValue += deltaFire;
         if (flyingWatered > 0.1) {
-            fireValue -= flyingWatered * 0.02f * GlobalVariables.Speed;
-            flyingWatered -= 0.1f;
+            fireValue -= flyingWatered * 0.03f * GlobalVariables.Speed;
+            flyingWatered -= 0.12f;
+            inflammability *= 0.997f;
         }
         if(watered > 0) {
-            fireValue -= watered * 0.1f * GlobalVariables.Speed;
+            fireValue -= watered * 0.15f * GlobalVariables.Speed;
+            inflammability *= 0.998f;
 
         }
         fireValue = Mathf.Clamp(fireValue, 0f, 100f);
@@ -110,39 +112,29 @@ public class Inflammable : MonoBehaviour {
         if(GlobalVariables.Speed > 0)
             myFireEffect.startLifetime = (1f * fireValue / 100f) / GlobalVariables.Speed;
 
-        UpdateMaterials();
-
     }
 
 
     void StartFire() {
         myFireEffect.Play();
-
+        InvokeRepeating("UpdateMaterials", 0f, Random.Range(0.8f, 1.2f));
     }
 
     void StopFire() {
         myFireEffect.Stop();
-
+        CancelInvoke();
     }
 
     void UpdateMaterials() {
         if (isMarked) return;
-        if (GlobalVariables.HighQuality) {
-            GameObject visual = transform.Find("Visual").Find("HQ").gameObject;
-            float myCutoff = 1f - conditionValue / 2000f;
-            visual.GetComponent<Renderer>().materials[4].SetFloat("_Cutoff", myCutoff);
-            float greyLevel = conditionValue / 1000f;
-            visual.GetComponent<Renderer>().materials[0].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
-            visual.GetComponent<Renderer>().materials[1].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
-            visual.GetComponent<Renderer>().materials[2].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
-            visual.GetComponent<Renderer>().materials[3].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
-        } else {
-            GameObject visual = transform.Find("Visual").Find("LQ").gameObject;
-            float greenLevel = conditionValue / 2000f;
-            visual.GetComponent<Renderer>().materials[0].color = new Color(0, greenLevel, 0, 1f);
-
-        }
-
+        Renderer myRenderer = transform.Find("Visual").GetComponent<Renderer>();
+        float myCutoff = 1f - conditionValue / 2000f;
+        myRenderer.materials[4].SetFloat("_Cutoff", myCutoff);
+        float greyLevel = conditionValue / 1000f;
+        myRenderer.materials[0].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+        myRenderer.materials[1].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+        myRenderer.materials[2].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
+        myRenderer.materials[3].color = new Color(greyLevel, greyLevel, greyLevel, 1f);
     }
 
     //Reçoit le feu de son voisin
@@ -155,10 +147,13 @@ public class Inflammable : MonoBehaviour {
     }
     
     public void UpdateQuality() {
-        bool hq = GlobalVariables.HighQuality;
-
-        transform.Find("Visual").Find("HQ").gameObject.SetActive(hq);
-        transform.Find("Visual").Find("LQ").gameObject.SetActive(!hq);
+        if (GlobalVariables.HighQuality) {
+            GetComponentInChildren<MeshRenderer>().receiveShadows = true;
+            GetComponentInChildren<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        } else {
+            GetComponentInChildren<MeshRenderer>().receiveShadows = false;
+            GetComponentInChildren<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        }
     }
 
     public void AddCloseTree(Inflammable closeTree) {
@@ -183,11 +178,9 @@ public class Inflammable : MonoBehaviour {
     }
 
     IEnumerator DelayedWatered() {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         flyingWatered++;
     }
-
-
 
 
     void UpdateStats() {

@@ -188,7 +188,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011224990260}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 783.0413, y: 9.88, z: 535.3667}
+  m_LocalPosition: {x: -0.18978357, y: 20, z: 19.36559}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -263,8 +263,8 @@ EllipsoidParticleEmitter:
   serializedVersion: 2
   m_Enabled: 1
   m_Emit: 1
-  minSize: 0.2
-  maxSize: 0.3
+  minSize: 0.5
+  maxSize: 0.8
   minEnergy: 3
   maxEnergy: 5
   minEmission: 100
@@ -435,7 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6617e31eb4e8af4c89abd8c6a3b54fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  vehicleType: 0
   WaterStreamFX: {fileID: 1000012430625720}
 --- !u!114 &114000013174537730
 MonoBehaviour:
