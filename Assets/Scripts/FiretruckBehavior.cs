@@ -7,6 +7,7 @@ public class FiretruckBehavior : MonoBehaviour {
     private bool isMoving = true;
     public GameObject WaterStreamFX;
     private bool isFighting = false;
+    Vector3 fightingLocation;
 
     void Awake() {
 
@@ -38,21 +39,24 @@ public class FiretruckBehavior : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider collider) {
-        if (collider.transform.parent != null)
+        Debug.Log(Vector3.Distance(fightingLocation, transform.position));
+        if (Vector3.Distance(fightingLocation, transform.position) < 18f)
+            FightFire(fightingLocation);
+        else if (collider.transform.parent != null)
             if (collider.transform.parent.tag == "Tree")
-                FightFire(collider);
+                FightFire(collider.transform.position);
     }
 
 
-    void FightFire(Collider tree) {
+    void FightFire(Vector3 tree) {
         if (isFighting) return;
         isFighting = true;
         isMoving = false;
         WaterStreamFX.SetActive(true);
 
         //orienter le jet d'eau vers l'arbre le plus proche
-        float myAngle = Vector3.Angle(transform.right, tree.transform.position - transform.position);
-        if (Vector3.Cross(transform.right, tree.transform.position - transform.position).y < 0)
+        float myAngle = Vector3.Angle(transform.right, tree - transform.position);
+        if (Vector3.Cross(transform.right, tree - transform.position).y < 0)
             myAngle = -myAngle;
         WaterStreamFX.transform.Rotate(new Vector3(0, 0, myAngle));
 
@@ -65,6 +69,10 @@ public class FiretruckBehavior : MonoBehaviour {
         }
         
 
+    }
+
+    public void SetFightingLocation(Vector3 location) {
+        fightingLocation = location;
     }
 
 }

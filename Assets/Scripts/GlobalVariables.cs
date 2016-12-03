@@ -39,14 +39,8 @@ public class GlobalVariables : MonoBehaviour {
 
         GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
         boundingBox.center += trees[0].transform.position;
-        foreach (GameObject tree in trees) {
+        foreach (GameObject tree in trees)
             boundingBox.Encapsulate(tree.transform.position);
-        }
-        Vector3 newSize = boundingBox.size;
-        newSize.y += 5;
-        newSize.x += 10;
-        newSize.z += 10;
-        boundingBox.size = newSize;
 
         boundingBoxMin = boundingBox.min;
         boundingBoxMax = boundingBox.max;
