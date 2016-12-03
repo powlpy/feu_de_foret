@@ -8,8 +8,8 @@ public class GlobalVariables : MonoBehaviour {
     public static int State = 0;
     public static Bounds boundingBox;
 
-    public static float windPower = 40f; // in km
-    public static float windDirection = 0f; // in radian
+    public static float windPower = 30f; // in km
+    public static float windDirection = Mathf.PI / 4f; // in radian
     public static float minRadiusFire = 10f; // minimal distance of fire radius
 
     private static Vector3 boundingBoxMin;
@@ -61,6 +61,16 @@ public class GlobalVariables : MonoBehaviour {
 
     public static Vector3 GetFirePoint() {
         return firePoint;
+    }
+
+    public static void SetWindForce(float force) {
+        windPower = force * 15f;
+
+    }
+
+    public static void SetWindAngle(float angle) {
+        angle = (360 - (angle + 180) + 45) * Mathf.Deg2Rad;
+        windDirection = angle;
     }
 
 }

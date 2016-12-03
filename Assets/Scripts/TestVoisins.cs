@@ -11,7 +11,7 @@ public class TestVoisins : MonoBehaviour {
     void MyStart () {
 
         Vector3 f1 = transform.position;
-        Vector3 direction = new Vector3(Mathf.Cos(GlobalVariables.windDirection), Mathf.Sin(GlobalVariables.windDirection));
+        Vector3 direction = new Vector3(Mathf.Cos(GlobalVariables.windDirection), 0, Mathf.Sin(GlobalVariables.windDirection));
         float focalDist = GlobalVariables.windPower * GlobalVariables.minRadiusFire / 25;
         Vector3 f2 = f1 + (direction * focalDist);
         float maxDistance = focalDist + GlobalVariables.minRadiusFire; // modification de la distance max

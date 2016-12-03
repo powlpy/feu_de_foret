@@ -196,14 +196,14 @@ public class Inflammable : MonoBehaviour {
     public void Mark(float r, float g, float b) {
         if (isMarked) return;
         isMarked = true;
-        transform.Find("HQ").gameObject.GetComponent<Renderer>().materials[4].color = new Color(r, g, b, 1f);
+        transform.Find("Visual").gameObject.GetComponent<Renderer>().materials[4].color = new Color(r, g, b, 1f);
 
     }
 
     public void ComputeNeighbors() {
 
         Vector3 f1 = transform.position;
-        Vector3 direction = new Vector3(Mathf.Cos(GlobalVariables.windDirection), Mathf.Sin(GlobalVariables.windDirection));
+        Vector3 direction = new Vector3(Mathf.Cos(GlobalVariables.windDirection), 0, Mathf.Sin(GlobalVariables.windDirection));
         float focalDist = GlobalVariables.windPower * GlobalVariables.minRadiusFire / 25;
         Vector3 f2 = f1 + (direction * focalDist);
         maxDistance = focalDist + GlobalVariables.minRadiusFire; // modification de la distance max

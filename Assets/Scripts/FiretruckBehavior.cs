@@ -39,7 +39,6 @@ public class FiretruckBehavior : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider collider) {
-        Debug.Log(Vector3.Distance(fightingLocation, transform.position));
         if (Vector3.Distance(fightingLocation, transform.position) < 18f)
             FightFire(fightingLocation);
         else if (collider.transform.parent != null)

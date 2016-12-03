@@ -4,11 +4,13 @@ using UnityEngine.UI;
 
 public class CanvasHandler : MonoBehaviour {
 
+    public GameObject BackgroundCircle;
     public GameObject SliderGlobalSpeed;
     public GameObject SliderSizeCircle;
     public GameObject SliderTreesCreated;
     public GameObject Firefighters;
     public GameObject Setups;
+    public GameObject WindControls;
 
     public GameObject HQButton;
     public GameObject LQButton;
@@ -23,8 +25,10 @@ public class CanvasHandler : MonoBehaviour {
 	public void StartSimulation() {
         Firefighters.SetActive(true);
         SliderGlobalSpeed.SetActive(true);
+        BackgroundCircle.SetActive(false);
         SliderSizeCircle.SetActive(false);
         SliderTreesCreated.SetActive(false);
+        WindControls.SetActive(false);
         Setups.SetActive(false);
 
 
