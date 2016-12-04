@@ -18,6 +18,7 @@ public class WindHandler : MonoBehaviour {
         myMark.rectTransform.anchoredPosition = GetMarkPosition(myDist, ang);
         GlobalVariables.SetWindForce(myDist / 15f);
         GlobalVariables.SetWindAngle(ang);
+        StartCoroutine(ComputeNewNeighbors());
     }
 
     float GetNewDistance(float oldDistance) {
@@ -36,6 +37,13 @@ public class WindHandler : MonoBehaviour {
         pos.x = radius * Mathf.Sin(ang * Mathf.Deg2Rad);
         pos.y = radius * Mathf.Cos(ang * Mathf.Deg2Rad);
         return pos;
+    }
+
+    IEnumerator ComputeNewNeighbors() {
+        yield return null;
+        foreach (GameObject Tree in GameObject.FindGameObjectsWithTag("Tree"))
+            Tree.GetComponent<Inflammable>().ComputeNeighbors();
+
     }
 
 }

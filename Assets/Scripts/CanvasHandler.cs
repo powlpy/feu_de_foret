@@ -28,7 +28,7 @@ public class CanvasHandler : MonoBehaviour {
         BackgroundCircle.SetActive(false);
         SliderSizeCircle.SetActive(false);
         SliderTreesCreated.SetActive(false);
-        WindControls.SetActive(false);
+        //WindControls.SetActive(false);
         Setups.SetActive(false);
 
 

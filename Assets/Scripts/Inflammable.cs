@@ -140,8 +140,8 @@ public class Inflammable : MonoBehaviour {
     //Reçoit le feu de son voisin
     public void PassFire(Inflammable foreignTree) {
         float foreignFire = foreignTree.GetComponent<Inflammable>().fireValue;
-        float distance = Vector3.Distance(gameObject.transform.position, foreignTree.GetComponentInChildren<Collider>().ClosestPointOnBounds(gameObject.transform.position));
-        fireValue += (foreignFire * 0.0002f) * GlobalVariables.Speed * (maxDistance - distance) / maxDistance;
+        float distance = Vector3.Distance(gameObject.transform.position, foreignTree.transform.position);
+        fireValue += (foreignFire * 0.00005f) * GlobalVariables.Speed * (maxDistance - distance) / maxDistance;
         fireValue = Mathf.Clamp(fireValue, 0f, 100f);
 
     }
