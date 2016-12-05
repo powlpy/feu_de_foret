@@ -11,7 +11,7 @@ public class CylinderBehavior : MonoBehaviour {
     public GameObject TreePrefab;
 
     void Start() {
-
+        GlobalVariables.State = 0;
         Resize();
 
         /*

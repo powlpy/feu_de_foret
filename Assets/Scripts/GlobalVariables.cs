@@ -3,6 +3,7 @@ using System.Collections;
 
 public class GlobalVariables : MonoBehaviour {
 
+    public static float Heat = 0;
     public static bool HighQuality = true;
     public static float Speed = 1f;
     public static int State = 0;

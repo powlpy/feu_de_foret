@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CanvasHandler : MonoBehaviour {
 
@@ -59,5 +60,10 @@ public class CanvasHandler : MonoBehaviour {
 
     void ChangeTerrainQuality() {
         GameObject.Find("Terrain").GetComponent<TerrainHandler>().UpdateQuality();    }
+
+    public void Restart() {
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
+    }
 
 }

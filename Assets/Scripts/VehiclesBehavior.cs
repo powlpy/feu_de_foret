@@ -20,16 +20,16 @@ public class VehiclesBehavior : MonoBehaviour {
             if (collider.transform.parent != null)
                 if (collider.transform.parent.tag == "Tree")
                     isValid = true;
-        if (!isValid) {
-            Debug.Log("not valid");
+        if (!isValid)
             return;
-        }
+
         float boundsSize = Vector3.Distance(maxBounds, minBounds);
         Vector3 centerBounds = (minBounds + maxBounds) / 2;
         Vector3 myDirection = flagPosition - centerBounds;
+        myDirection.y = 0;
         myDirection.Normalize();
-        myDirection += new Vector3(Random.Range(-0.3f, 0.5f), Random.Range(-0.3f, 0.5f), Random.Range(-0.3f, 0.5f));
-        Vector3 myPosition = flagPosition + myDirection * boundsSize * 0.5f;
+        myDirection += new Vector3(Random.value, Random.value, Random.value);
+        Vector3 myPosition = flagPosition + myDirection * (boundsSize * 0.5f + 15);
 
         
         GameObject fireTruck = (GameObject)Instantiate(FireTruck);

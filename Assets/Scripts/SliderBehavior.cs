@@ -7,13 +7,19 @@ public class SliderBehavior : MonoBehaviour {
     public Slider SpeedSlider;
     public Slider SizeCircleSlider;
     public Slider NbTreesCreatedSlider;
+    public Slider GlobalHeatSlider;
 
     // Use this for initialization
     void Start() {
         SpeedSlider.onValueChanged.AddListener(delegate { SpeedValueChanged(); });
         SizeCircleSlider.onValueChanged.AddListener(delegate { SizeCircleValueChanged(); });
         NbTreesCreatedSlider.onValueChanged.AddListener(delegate { NbTreesCreatedValueChanged(); });
+        GlobalHeatSlider.onValueChanged.AddListener(delegate { GlobalHeatSliderValueChanged(); });
 
+    }
+
+    void GlobalHeatSliderValueChanged() {
+        GlobalVariables.Heat = GlobalHeatSlider.value;
     }
 
     void SpeedValueChanged() {
@@ -22,7 +28,7 @@ public class SliderBehavior : MonoBehaviour {
 
         if (GlobalVariables.Speed == 0f) Time.timeScale = 0;
         else Time.timeScale = 1;
-
+        /*
         GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
         foreach (GameObject Tree in trees) {
             ParticleSystem myParticleSystem = Tree.GetComponent<ParticleSystem>();
@@ -30,7 +36,7 @@ public class SliderBehavior : MonoBehaviour {
                 Tree.GetComponent<ParticleSystem>().startSpeed = 1 + SpeedSlider.value;
                 Tree.GetComponent<ParticleSystem>().startLifetime = 1.3f / SpeedSlider.value;
             }
-        }
+        }*/
     }
 
     void SizeCircleValueChanged() {

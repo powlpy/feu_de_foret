@@ -6,7 +6,7 @@ public class TreesSetup : MonoBehaviour {
     public GameObject TreePrefab;
 
     private float[] sizeSetup = new float[] { 0f, 40f, 40f, 80f, 80f, 150f, 150f};
-    private int[] nbTreesSetup = new int[] { 0, 40, 120, 120, 240, 500, 1300 };
+    private int[] nbTreesSetup = new int[] { 0, 40, 160, 120, 300, 500, 1300 };
     
 
     public void Setup(int setup) {

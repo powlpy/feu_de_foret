@@ -384,7 +384,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010125642178}
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -2.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
   m_Children:
@@ -424,7 +424,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011941756002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5617065, y: -0.122778274, z: 13.821167}
+  m_LocalPosition: {x: -4.6849365, y: 14.67, z: 2.7662354}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -466,7 +466,7 @@ ParticleAnimator:
     rgba: 16777215
   worldRotationAxis: {x: 0, y: 0, z: 0}
   localRotationAxis: {x: 0, y: 0, z: 0}
-  sizeGrow: 1.1
+  sizeGrow: 1
   rndForce: {x: 0.2, y: 0, z: 0.2}
   force: {x: 0, y: -1, z: 0}
   damping: 0.8
@@ -484,7 +484,7 @@ EllipsoidParticleEmitter:
   minSize: 0.9
   maxSize: 1.2
   minEnergy: 3
-  maxEnergy: 5
+  maxEnergy: 3
   minEmission: 200
   maxEmission: 300
   worldVelocity: {x: 0, y: 0, z: 0}

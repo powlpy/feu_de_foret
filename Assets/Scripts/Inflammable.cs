@@ -20,7 +20,7 @@ public class Inflammable : MonoBehaviour {
 
     void Awake() {
 
-        inflammability = Random.Range(0.8f, 1.15f);
+        inflammability = Random.Range(0f, 1.5f);
 
         myStatistics = GameObject.Find("Global").GetComponent<MyStatistics>();
 
@@ -61,14 +61,13 @@ public class Inflammable : MonoBehaviour {
         //le feu evolue
         float deltaFire = (0.01f * fireValue) * GlobalVariables.Speed;
         deltaFire *= (1 - Mathf.Pow(conditionValue - 550, 2) / 200000f);
-        if(deltaFire > 0)
-            deltaFire -= (1 - inflammability) * deltaFire;
-        else
-            deltaFire += (1 - inflammability) * deltaFire;
-
+        float deltaFire2, deltaFire3;
+        deltaFire2 = (inflammability - 1) * Mathf.Abs(deltaFire);
+        deltaFire3 = GlobalVariables.Heat * 2 * Mathf.Abs(deltaFire);
+        deltaFire += deltaFire2 + deltaFire3;
         fireValue += deltaFire;
         if (flyingWatered > 0.1) {
-            fireValue -= flyingWatered * 0.03f * GlobalVariables.Speed;
+            fireValue -= flyingWatered * 0.035f * GlobalVariables.Speed;
             flyingWatered -= 0.12f;
             inflammability *= 0.997f;
         }
@@ -84,7 +83,7 @@ public class Inflammable : MonoBehaviour {
         else if (!currentBurning && wasBurning) StopFire();
         wasBurning = currentBurning;
 
-        if (fireValue < 1) return;
+        if (!IsBurning()) return;
 
         //Le feu se répand aux voisins
         foreach (Inflammable closeTree in closeTrees) {
@@ -94,13 +93,11 @@ public class Inflammable : MonoBehaviour {
         }
 
         //L'arbre se dégrade
-        if (IsBurning()) {
-            conditionValue -= 0.01f * fireValue;
-            conditionValue = Mathf.Clamp(conditionValue, 0f, 1000f);
-            if(conditionValue == 0f) {
-                isBurnt = true;
-                StopFire();
-            }
+        conditionValue -= 0.01f * fireValue;
+        conditionValue = Mathf.Clamp(conditionValue, 0f, 1000f);
+        if(conditionValue < 5f) {
+            isBurnt = true;
+            StopFire();
         }
 
         UpdateStats();
