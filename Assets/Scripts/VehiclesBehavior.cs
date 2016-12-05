@@ -7,6 +7,15 @@ public class VehiclesBehavior : MonoBehaviour {
     public GameObject FireHelicopter;
     public GameObject FirePlane;
 
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            GoFireTrucks();
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            GoFlyingVehicle(0);
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            GoFlyingVehicle(1);
+    }
+
     public void GoFireTrucks() {
         if (GlobalVariables.State == 0) return;
         //  a   b
@@ -28,9 +37,8 @@ public class VehiclesBehavior : MonoBehaviour {
         Vector3 myDirection = flagPosition - centerBounds;
         myDirection.y = 0;
         myDirection.Normalize();
-        myDirection += new Vector3(Random.value, Random.value, Random.value);
-        Vector3 myPosition = flagPosition + myDirection * (boundsSize * 0.5f + 15);
-
+        //myDirection += new Vector3(Random.value / 2f, 0, Random.value / 2f);
+        Vector3 myPosition = flagPosition + myDirection * (0.5f * boundsSize);
         
         GameObject fireTruck = (GameObject)Instantiate(FireTruck);
         myPosition.y = 0.25f;

@@ -8,6 +8,7 @@ public class FiretruckBehavior : MonoBehaviour {
     public GameObject WaterStreamFX;
     private bool isFighting = false;
     Vector3 fightingLocation;
+    Inflammable myTree;
 
     void Awake() {
 
@@ -39,23 +40,65 @@ public class FiretruckBehavior : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider collider) {
-        if (Vector3.Distance(fightingLocation, transform.position) < 18f)
-            FightFire(fightingLocation);
-        else if (collider.transform.parent != null)
-            if (collider.transform.parent.tag == "Tree")
-                FightFire(collider.transform.position);
+        if (collider.transform.parent != null) {
+            if (collider.transform.parent.tag == "Tree") {
+                isMoving = false;
+                if (collider.transform.parent.GetComponent<Inflammable>().IsBurning())
+                    FightFire(collider.transform.parent.GetComponent<Inflammable>());
+                else {
+                    foreach (Collider tree in Physics.OverlapSphere(transform.position, 15f)) {
+                        if (tree.transform.parent != null)
+                            if (tree.transform.parent.tag == "Tree")
+                                if (tree.GetComponentInParent<Inflammable>().IsBurning())
+                                    FightFire(tree.GetComponentInParent<Inflammable>());
+
+                    }
+                }
+                InvokeRepeating("CheckFireNeighbors", 4f, 4f);
+            }
+        } 
+    }
+
+    void CheckFireNeighbors() {
+        if (myTree != null) {
+            bool continueFighting = false;
+            Collider[] closeTrees = Physics.OverlapSphere(myTree.transform.position, 7f);
+            int i = 0;
+            while (!continueFighting && i < closeTrees.Length) {
+                Collider tempTree = closeTrees[i];
+                if (tempTree.transform.parent != null)
+                    if (tempTree.transform.parent.tag == "Tree")
+                        if (tempTree.GetComponentInParent<Inflammable>().IsBurning()) {
+                            continueFighting = true;
+                        }
+                i++;
+            }
+            if(!continueFighting)
+                StopFighting();
+        }
+
+        if (!isFighting) {
+            foreach (Collider tree in Physics.OverlapSphere(transform.position, 15f))
+                if (tree.transform.parent != null)
+                    if (tree.transform.parent.tag == "Tree")
+                        if (tree.GetComponentInParent<Inflammable>().IsBurning())
+                            FightFire(tree.GetComponentInParent<Inflammable>());
+        }
     }
 
 
-    void FightFire(Vector3 tree) {
+    void FightFire(Inflammable burningTree) {
+        myTree = burningTree;
+        Vector3 treePosition = burningTree.transform.position;
         if (isFighting) return;
         isFighting = true;
         isMoving = false;
         WaterStreamFX.SetActive(true);
+        WaterStreamFX.GetComponentInChildren<EllipsoidParticleEmitter>().emit = true;
 
         //orienter le jet d'eau vers l'arbre le plus proche
-        float myAngle = Vector3.Angle(transform.right, tree - transform.position);
-        if (Vector3.Cross(transform.right, tree - transform.position).y < 0)
+        float myAngle = Vector3.Angle(transform.right, treePosition - transform.position);
+        if (Vector3.Cross(transform.right, treePosition - transform.position).y < 0)
             myAngle = -myAngle;
         WaterStreamFX.transform.Rotate(new Vector3(0, 0, myAngle));
 
@@ -66,7 +109,12 @@ public class FiretruckBehavior : MonoBehaviour {
                 if (collider.transform.parent.tag == "Tree")
                     collider.GetComponentInParent<Inflammable>().Watered();
         }
-        
+    }
+
+    void StopFighting() {
+        isFighting = false;
+        myTree = null;
+        WaterStreamFX.GetComponentInChildren<EllipsoidParticleEmitter>().emit = false;
 
     }
 

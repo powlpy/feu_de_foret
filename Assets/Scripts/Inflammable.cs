@@ -82,9 +82,7 @@ public class Inflammable : MonoBehaviour {
         if (currentBurning && !wasBurning) StartFire();
         else if (!currentBurning && wasBurning) StopFire();
         wasBurning = currentBurning;
-
-        if (!IsBurning()) return;
-
+        
         //Le feu se répand aux voisins
         foreach (Inflammable closeTree in closeTrees) {
             if(closeTree != null)
@@ -118,6 +116,7 @@ public class Inflammable : MonoBehaviour {
     }
 
     void StopFire() {
+        fireValue = 0;
         myFireEffect.Stop();
         CancelInvoke();
     }
@@ -136,10 +135,13 @@ public class Inflammable : MonoBehaviour {
 
     //Reçoit le feu de son voisin
     public void PassFire(Inflammable foreignTree) {
+        if (isBurnt) return;
+        bool b = IsBurning();
         float foreignFire = foreignTree.GetComponent<Inflammable>().fireValue;
         float distance = Vector3.Distance(gameObject.transform.position, foreignTree.transform.position);
         fireValue += (foreignFire * 0.00005f) * GlobalVariables.Speed * (maxDistance - distance) / maxDistance;
         fireValue = Mathf.Clamp(fireValue, 0f, 100f);
+        if (IsBurning() && !b) StartFire();
 
     }
     
@@ -162,7 +164,7 @@ public class Inflammable : MonoBehaviour {
         fireValue = 30f;
     }
 
-    bool IsBurning() {
+    public bool IsBurning() {
         return fireValue > 15f;
     }
 
