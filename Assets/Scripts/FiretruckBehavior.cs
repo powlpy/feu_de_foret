@@ -54,13 +54,14 @@ public class FiretruckBehavior : MonoBehaviour {
 
                     }
                 }
-                InvokeRepeating("CheckFireNeighbors", 4f, 4f);
+                InvokeRepeating("CheckFireNeighbors", 2f, 2f);
             }
         } 
     }
 
     void CheckFireNeighbors() {
         if (myTree != null) {
+            if (myTree.IsBurning()) return;
             bool continueFighting = false;
             Collider[] closeTrees = Physics.OverlapSphere(myTree.transform.position, 7f);
             int i = 0;
@@ -69,6 +70,8 @@ public class FiretruckBehavior : MonoBehaviour {
                 if (tempTree.transform.parent != null)
                     if (tempTree.transform.parent.tag == "Tree")
                         if (tempTree.GetComponentInParent<Inflammable>().IsBurning()) {
+                            FightFire(tempTree.GetComponentInParent<Inflammable>());
+                            Debug.Log("change tree");
                             continueFighting = true;
                         }
                 i++;
@@ -88,9 +91,9 @@ public class FiretruckBehavior : MonoBehaviour {
 
 
     void FightFire(Inflammable burningTree) {
+        WaterStreamFX.transform.localEulerAngles = new Vector3(0, 0, -90);
         myTree = burningTree;
         Vector3 treePosition = burningTree.transform.position;
-        if (isFighting) return;
         isFighting = true;
         isMoving = false;
         WaterStreamFX.SetActive(true);

@@ -67,7 +67,7 @@ public class Inflammable : MonoBehaviour {
         deltaFire += deltaFire2 + deltaFire3;
         fireValue += deltaFire;
         if (flyingWatered > 0.1) {
-            fireValue -= flyingWatered * 0.035f * GlobalVariables.Speed;
+            fireValue -= flyingWatered * 0.1f * GlobalVariables.Speed;
             flyingWatered -= 0.12f;
             inflammability *= 0.997f;
         }
@@ -172,13 +172,13 @@ public class Inflammable : MonoBehaviour {
         watered++;
     }
 
-    public void WateredHelicopter() {
-        StartCoroutine(DelayedWatered());
+    public void WateredHelicopter(float f) {
+        StartCoroutine(DelayedWatered(f));
     }
 
-    IEnumerator DelayedWatered() {
+    IEnumerator DelayedWatered(float force) {
         yield return new WaitForSeconds(1f);
-        flyingWatered++;
+        flyingWatered += force;
     }
 
 

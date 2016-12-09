@@ -5,8 +5,13 @@ using UnityEngine.UI;
 public class WindHandler : MonoBehaviour {
 
     public void OnClick() {
-        Vector2 myPosition = GUIUtility.ScreenToGUIPoint(Input.mousePosition) - RectTransformUtility.WorldToScreenPoint(null, transform.position);
-        GameObject temp = transform.Find("Image").Find("Mark").gameObject;
+        Vector2 myPosition = Input.mousePosition - transform.position;
+        //Vector2 myPosition = GUIUtility.ScreenToGUIPoint(Input.mousePosition) - RectTransformUtility.WorldToScreenPoint(null, transform.position);
+        //Vector2 myPosition = GUIUtility.ScreenToGUIPoint(Input.mousePosition) - GetComponent<RectTransform>().anchoredPosition;
+        //Debug.Log(GUIUtility.ScreenToGUIPoint(Input.mousePosition));
+        //RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)gameObject, )
+        //Debug.Log(GetComponent<RectTransform>().anchoredPosition);
+        GameObject temp = transform.Find("Mark").gameObject;
         Image myMark = temp.GetComponentInChildren<Image>();
 
         float myDist = Vector2.Distance(myPosition, Vector2.zero);

@@ -13,14 +13,18 @@ public class FlyingVehicleBehavior : MonoBehaviour {
     private bool isBombarding = false;
     private bool isEmpty = false;
     private Vector3 bombardmentLocation;
-    private float bombardmentDistance; 
+    private float bombardmentDistance;
+    private float waterForce;
 
     void Start() {
         bombardmentDistance = 20f;
-        if (vehicleType == FlyingVehicle.Helicopter)
+        if (vehicleType == FlyingVehicle.Helicopter) {
             speed = 30;
-        else
+            waterForce = 2;
+        } else {
             speed = 60;
+            waterForce = 10;
+        }
     }
     
     void Update() {
@@ -34,7 +38,7 @@ public class FlyingVehicleBehavior : MonoBehaviour {
             foreach (Collider collider in Physics.OverlapSphere(currentBombardmentPosition, 9f)) {
                 if (collider.transform.parent != null)
                     if (collider.transform.parent.tag == "Tree")
-                        collider.GetComponentInParent<Inflammable>().WateredHelicopter();
+                        collider.GetComponentInParent<Inflammable>().WateredHelicopter(waterForce);
 
             }
         }

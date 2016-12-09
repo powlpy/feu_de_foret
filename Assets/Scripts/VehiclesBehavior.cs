@@ -37,7 +37,7 @@ public class VehiclesBehavior : MonoBehaviour {
         Vector3 myDirection = flagPosition - centerBounds;
         myDirection.y = 0;
         myDirection.Normalize();
-        //myDirection += new Vector3(Random.value / 2f, 0, Random.value / 2f);
+        myDirection += new Vector3(Random.value / 2f, 0, Random.value / 2f);
         Vector3 myPosition = flagPosition + myDirection * (0.5f * boundsSize);
         
         GameObject fireTruck = (GameObject)Instantiate(FireTruck);
