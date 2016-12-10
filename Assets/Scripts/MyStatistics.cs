@@ -10,7 +10,7 @@ public class MyStatistics : MonoBehaviour {
     public void Awake() {
         NbTrees = 0;
         NbDamagedTrees = 0;
-        NbDamagedTrees = 0;
+        NbBurntTrees = 0;
 
         TextIntactTrees = GameObject.Find("TextStats1");
         TextDamagedTrees = GameObject.Find("TextStats2");
@@ -91,6 +91,15 @@ public class MyStatistics : MonoBehaviour {
         return percentage.ToString() + " %";
     }
 
+	public int GetNbBurnTrees(){
+		return NbBurntTrees;
+	}
 
+	public int GetNbTrees(){
+		return NbTrees;
+	}
 
+	public int GetNbDamagedTrees(){
+		return NbDamagedTrees;
+	}
 }

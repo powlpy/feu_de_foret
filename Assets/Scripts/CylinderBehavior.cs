@@ -9,6 +9,7 @@ public class CylinderBehavior : MonoBehaviour {
     public int NbTreesCreated = 10;
 
     public GameObject TreePrefab;
+	public Grapher grapher;
 
     void Start() {
         GlobalVariables.State = 0;
@@ -77,6 +78,10 @@ public class CylinderBehavior : MonoBehaviour {
             Radius = 2;
             Resize();
             GlobalVariables.NextState();
+
+			if (grapher != null) {
+				grapher.launch ();
+			}
         }
 
     }

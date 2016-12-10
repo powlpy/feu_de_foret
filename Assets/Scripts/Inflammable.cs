@@ -113,6 +113,7 @@ public class Inflammable : MonoBehaviour {
     void StartFire() {
         myFireEffect.Play();
         InvokeRepeating("UpdateMaterials", 0f, Random.Range(0.8f, 1.2f));
+
     }
 
     void StopFire() {
