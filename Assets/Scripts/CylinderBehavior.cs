@@ -35,7 +35,7 @@ public class CylinderBehavior : MonoBehaviour {
             if (Input.GetMouseButtonDown(1)) {
                 StartFire();
             }
-            if (Input.GetMouseButtonDown(2)) {
+			if (Input.GetMouseButtonDown(2) || Input.GetKeyDown(KeyCode.A)) {
                 DrawTrees();
             }
         } else {
