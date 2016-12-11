@@ -16,7 +16,7 @@ public class Grapher : MonoBehaviour {
 	List<int> valuesBurnt;
 	List<int> valuesTotalDamages;
 	public int refreshTempo;
-	public int nbTree = 0;
+	public int nbTree;
 
 	public Color baseColor;
 	public Color IntactTreeColor;
@@ -24,12 +24,16 @@ public class Grapher : MonoBehaviour {
 	public Color BurntTreeColor;
 	public Color TotalDamagesColor;
 
-	float counter = 0f;
+	float counter;
 
-	bool draw = false;
+	bool draw;
 
 
 	void Start() {
+		nbTree = 0;
+		counter = 0f;
+		draw = false;
+
 		texture = new Texture2D(width, height);
 		valuesIntact = new List<int> ();
 		valuesDamaged = new List<int> ();
@@ -51,18 +55,22 @@ public class Grapher : MonoBehaviour {
 			}
 			counter = (float)refreshTempo;
 			clear ();
+			/*
 			valuesIntact.Add(myStatistics.GetNbIntactTrees ());
 			valuesDamaged.Add (myStatistics.GetNbDamagedTrees ());
 			valuesBurnt.Add (myStatistics.GetNbBurnTrees ());
+			//*/
 			valuesTotalDamages.Add ((int)myStatistics.GetTotalDamage ());
 
-			int nbValues = valuesIntact.Count;
+			int nbValues = valuesTotalDamages.Count;
 			float step = (float)(nbValues) / width;
 			float recadrage = (float)(height - 2) / nbTree;
 			for (int i = 0; i < width; i++) {
+				/*
 				texture.SetPixel (i, (int)((valuesIntact[(int)(i * step)] * recadrage) + 1), IntactTreeColor);
 				texture.SetPixel (i, (int)((valuesDamaged[(int)(i * step)] * recadrage) + 1), DamagedTreeColor);
 				texture.SetPixel (i, (int)((valuesBurnt[(int)(i * step)] * recadrage) + 1), BurntTreeColor);
+				//*/
 				texture.SetPixel (i, (int)((valuesTotalDamages[(int)(i * step)] * recadrage / 1000) + 1), TotalDamagesColor);
 			}
 

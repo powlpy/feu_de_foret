@@ -18,6 +18,15 @@ public class GlobalVariables : MonoBehaviour {
 
     private static Vector3 firePoint;
 
+	public static void Reset () {
+		Heat = 0;
+		Speed = 1f;
+		State = 0;
+		windPower = 30f;
+		windDirection = Mathf.PI / 4f;
+		minRadiusFire = 10f;
+	}
+
     public static void NextState() {
         if (State == 0) {
             NextState0to1();
