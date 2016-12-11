@@ -12,11 +12,13 @@ public class Grapher : MonoBehaviour {
 	public MyStatistics myStatistics;
 
 	List<int> values;
-	public int refreshTempo; // in ms
+	public int refreshTempo;
 	public int nbTree = 0;
 
 	public Color baseColor;
 	public Color curveColor;
+
+	int counter = 0;
 
 	bool draw = false;
 
@@ -37,15 +39,21 @@ public class Grapher : MonoBehaviour {
 
 	void Update() {
 		if (draw) {
+			if (counter != 0) {
+				counter--;
+				return;
+			}
+			counter = refreshTempo;
 			clear ();
-			addValue (myStatistics.GetNbDamagedTrees ());
+			addValue (myStatistics.GetNbIntactTrees ());
 
 			int nbValues = values.Count;
 			double step = (double)(nbValues) / width;
-			double recadrage = (height) / nbTree;
+			double recadrage = height / nbTree;
 			for (int i = 0; i < width; i++) {
-				texture.SetPixel (i, (int)(values.IndexOf ((int)(i * step + 0.5)) * recadrage), curveColor);
+				texture.SetPixel (i, (int)((values[(int)(i * step)] * recadrage)), curveColor);
 			}
+
 			texture.Apply();
 		}
 	}

@@ -57,7 +57,7 @@ public class MyStatistics : MonoBehaviour {
         UpdateStats();
     }
 
-    int GetNbIntactTrees() {
+    public int GetNbIntactTrees() {
         return NbTrees - (NbDamagedTrees + NbBurntTrees);
     }
 
