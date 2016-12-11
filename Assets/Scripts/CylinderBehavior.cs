@@ -32,7 +32,7 @@ public class CylinderBehavior : MonoBehaviour {
                 transform.position = hit.point;
             }
 
-            if (Input.GetMouseButtonDown(1)) {
+			if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.F)) {
                 StartFire();
             }
 			if (Input.GetMouseButtonDown(2) || Input.GetKeyDown(KeyCode.A)) {
