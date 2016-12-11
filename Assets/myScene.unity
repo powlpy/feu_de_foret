@@ -962,6 +962,28 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2059381815}
+        m_MethodName: SetActive
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1700645880}
+        m_MethodName: SetActive
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 1
@@ -8125,7 +8147,7 @@ MonoBehaviour:
   IntactTreeColor: {r: 0.17647053, g: 0.88235295, b: 0, a: 0}
   DamagedTreeColor: {r: 1, g: 0.82109535, b: 0.07352942, a: 0}
   BurntTreeColor: {r: 1, g: 0.03676468, b: 0.03676468, a: 0}
-  TotalDamagesColor: {r: 0.470603, g: 0.4509083, b: 1, a: 0}
+  TotalDamagesColor: {r: 1, g: 0.16176468, b: 0.16176468, a: 0}
 --- !u!1 &1753075933
 GameObject:
   m_ObjectHideFlags: 0
