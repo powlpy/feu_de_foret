@@ -47,7 +47,7 @@ public class MyStatistics : MonoBehaviour {
         TextIntactTrees.GetComponent<Text>().text = "Intact trees :   \t" + GetPercentageIntactTrees();
         TextDamagedTrees.GetComponent<Text>().text = "Damaged trees : \t" + GetPercentageDamagedTrees();
         TextBurntTrees.GetComponent<Text>().text = "Burnt trees :     \t" + GetPercentageBurntTrees();
-		TextTotalDamages.GetComponent<Text>().text = "Damages :      \t" + GetPercentageTotalDamages();
+		TextTotalDamages.GetComponent<Text>().text = "Damage :      \t" + GetPercentageTotalDamages();
 
     }
 
