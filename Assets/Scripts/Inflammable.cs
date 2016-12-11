@@ -17,6 +17,7 @@ public class Inflammable : MonoBehaviour {
     private float flyingWatered = 0;
     private int status = 0; //0: intact, 1: damaged, 2: burnt
     private bool isMarked = false;
+	private float preCond = 1000; // utilisé pour la mise à jour des dommages dans myStatistics
 
     void Awake() {
 
@@ -184,13 +185,18 @@ public class Inflammable : MonoBehaviour {
 
 
     void UpdateStats() {
-        if(status == 0 && conditionValue < 850) {
-            status = 1;
-            myStatistics.AddDamaged();
-        }else if(status == 1 && conditionValue < 150) {
-            status = 2;
-            myStatistics.AddBurnt();
-        }
+		if (conditionValue < preCond) {
+			if (status == 0 && conditionValue < 850) {
+				status = 1;
+				myStatistics.AddDamaged ();
+			} else if (status == 1 && conditionValue < 150) {
+				status = 2;
+				myStatistics.AddBurnt ();
+			}
+		}
+
+		myStatistics.AddTotalDamages (preCond - conditionValue);
+		preCond = conditionValue;
     }
 
     public void Mark(float r, float g, float b) {

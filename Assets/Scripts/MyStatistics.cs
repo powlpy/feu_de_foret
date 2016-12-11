@@ -4,18 +4,21 @@ using UnityEngine.UI;
 
 public class MyStatistics : MonoBehaviour {
 
-    private int NbTrees, NbDamagedTrees, NbBurntTrees;
-    private GameObject TextIntactTrees, TextDamagedTrees, TextBurntTrees, TextNbTrees;
+	private int NbTrees, NbDamagedTrees, NbBurntTrees;
+	private float TotalDamages;
+    private GameObject TextIntactTrees, TextDamagedTrees, TextBurntTrees, TextNbTrees, TextTotalDamages;
 
     public void Awake() {
         NbTrees = 0;
         NbDamagedTrees = 0;
         NbBurntTrees = 0;
+		TotalDamages = 0f;
 
         TextIntactTrees = GameObject.Find("TextStats1");
         TextDamagedTrees = GameObject.Find("TextStats2");
         TextBurntTrees = GameObject.Find("TextStats3");
         TextNbTrees = GameObject.Find("TextStats4");
+		TextTotalDamages = GameObject.Find ("TextStats5");
     }
 
     public void Start() {
@@ -27,6 +30,7 @@ public class MyStatistics : MonoBehaviour {
         NbTrees = 0;
         NbDamagedTrees = 0;
         NbDamagedTrees = 0;
+		TotalDamages = 0f;
     }
 
     public void IncrementNbTree() {
@@ -42,19 +46,18 @@ public class MyStatistics : MonoBehaviour {
 
         TextIntactTrees.GetComponent<Text>().text = "Intact trees :   \t" + GetPercentageIntactTrees();
         TextDamagedTrees.GetComponent<Text>().text = "Damaged trees : \t" + GetPercentageDamagedTrees();
-        TextBurntTrees.GetComponent<Text>().text = "Burnt trees :     \t" + GetPercentageBurntTrees().ToString();
+        TextBurntTrees.GetComponent<Text>().text = "Burnt trees :     \t" + GetPercentageBurntTrees();
+		TextTotalDamages.GetComponent<Text>().text = "Damages :      \t" + GetPercentageTotalDamages();
 
     }
 
     public void AddDamaged() {
         NbDamagedTrees++;
-        UpdateStats();
     }
 
     public void AddBurnt() {
         NbDamagedTrees--;
         NbBurntTrees++;
-        UpdateStats();
     }
 
     public int GetNbIntactTrees() {
@@ -91,6 +94,16 @@ public class MyStatistics : MonoBehaviour {
         return percentage.ToString() + " %";
     }
 
+	string GetPercentageTotalDamages() {
+		float percentage;
+		if (TotalDamages > 0) {
+			percentage = Mathf.Round (TotalDamages / (float)NbTrees * 0.1f);
+		} else {
+			percentage = 0f;
+		}
+		return percentage.ToString () + " %";
+	}
+
 	public int GetNbBurnTrees(){
 		return NbBurntTrees;
 	}
@@ -101,5 +114,14 @@ public class MyStatistics : MonoBehaviour {
 
 	public int GetNbDamagedTrees(){
 		return NbDamagedTrees;
+	}
+
+	public float GetTotalDamage(){
+		return TotalDamages;
+	}
+
+	public void AddTotalDamages(float damages){
+		TotalDamages += damages;
+		UpdateStats ();
 	}
 }
